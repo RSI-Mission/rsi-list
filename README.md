@@ -1,7 +1,6 @@
 <a href="https://rsi-list.com"><img src="assets/cover.jpg" alt="RSI List: the recursive self-improvement landscape" width="100%"></a>
 
-<p align="center"><img src="assets/logo.png" alt="RSI List logo" width="120"></p>
-<h1 align="center">RSI List</h1>
+<h1 align="center"><img src="assets/logo.png" alt="RSI List logo" width="56" align="middle">&nbsp; RSI List</h1>
 
 A cited directory of the organizations working toward recursive self-improvement: AI that improves the process of building AI. 42 entries, each graded on what it has publicly demonstrated, with a dated source behind every figure.
 
