@@ -259,7 +259,13 @@
   .tk-tip .d{font-family:"IBM Plex Mono",monospace; color:var(--accent-ink); font-size:11px; letter-spacing:.06em}
   .tk-tip .c{font-weight:600; color:var(--ink)}
   .tk-tip .e{color:var(--muted)}
-  .tk-foot{color:var(--faint); font-size:12.5px; margin:12px 0 0; line-height:1.5}
+  .tk-foot{color:var(--faint); font-size:12.5px; margin:8px 0 0; line-height:1.5}
+  .tk-notes{margin-top:6px}
+  .tk-notes summary{cursor:pointer; list-style:none; color:var(--faint); font-size:11px; font-family:"IBM Plex Mono",monospace; letter-spacing:.06em; opacity:.75}
+  .tk-notes summary::-webkit-details-marker{display:none}
+  .tk-notes summary::before{content:"▸"; display:inline-block; width:12px; transition:transform .16s ease}
+  .tk-notes[open] summary::before{transform:rotate(90deg)}
+  .tk-notes summary:hover{opacity:1; color:var(--muted)}
   .note h3{margin:0 0 6px; font-size:12px; font-family:"IBM Plex Mono",monospace; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-ink)}
   .note p{margin:0; color:var(--muted); font-size:14px; max-width:100ch}
   .note p + p{margin-top:9px}
@@ -507,7 +513,7 @@
         <p class="tk-sub">Recursive self-improvement, or RSI, is AI doing the work of building better AI. Whoever gets that loop running first sets the pace for the rest of the field, which is why it is worth tracking closely. Nobody has closed the loop yet. Plenty of teams say they are close.</p>
         <p class="tk-sub">This directory lists the companies working toward it, from whichever angle they take: models that train their successors, harnesses that run research without a human in the loop, and the infrastructure and data underneath. It stopped being a frontier-lab story some time ago. Small teams with a tight loop are moving fast, and a good share of the results marked on the chart came from them, not from the labs.</p>
         <p class="tk-sub" id="tk-sub"></p>
-        <p class="tk-foot" id="tk-foot"></p>
+        <details class="tk-notes"><summary>what is on the curve, and what is not</summary><p class="tk-foot" id="tk-foot"></p></details>
       </div>
     </div>
   </div>
