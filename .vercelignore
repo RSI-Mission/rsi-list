@@ -1,0 +1,9 @@
+# Deploy only the site itself; everything else is working material.
+# data/tags.json ships as a read-only snapshot so the Tag column shows on the
+# static host. Vercel's matcher needs "!data" WITHOUT a trailing slash — with
+# "!data/" the whole directory stays ignored (verified with `vercel build`).
+*
+!index.html
+!data
+data/*
+!data/tags.json

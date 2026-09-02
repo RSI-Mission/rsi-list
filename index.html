@@ -1,0 +1,1704 @@
+<meta charset="utf-8">
+<title>RSI List — The recursive self-improvement landscape</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Vercel Web Analytics. /_vercel/insights/ only exists on the Vercel deploy, so the
+     src 404s harmlessly under tagserver.py / file://. These tags must stay ABOVE the main
+     inline script, and the stub tag needs its type attribute: the syntax check in CLAUDE.md
+     greedily matches from the first bare script open-tag to the last close-tag in the file
+     (which is also why this comment must not spell those tags out). -->
+<script type="text/javascript">window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=DotGothic16&family=Doto:wght@800;900&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Dark-only since the ui-restyle branch: the glass/glow language doesn't survive a
+     light palette, so the old light theme and data-theme toggle blocks were removed. */
+  :root{
+    --paper:#000000; --surface:rgba(255,255,255,.035); --ink:#F2F3F1; --muted:#8E8E8E; --faint:#6E6E6E;
+    --line:rgba(255,255,255,.14); --line-soft:rgba(255,255,255,.07);
+    /* accent family follows the hero's warm dune light (peach/mauve), not green */
+    --accent:#E8A87C; --accent-ink:#F0C29B; --accent-soft:rgba(232,168,124,.16); --accent-wash:rgba(255,255,255,.06);
+    --l1:#4A3242; --l1-ink:#D8C2D6; --l2:#6E4658; --l2-ink:#ECD2DC; --l3:#A06A6E; --l3-ink:#FBF3F0; --l4:#E8A87C; --l4-ink:#2A1508;
+    --warn:#D3B45E; --chip:rgba(255,255,255,.07);
+    --shadow:0 1px 2px rgba(0,0,0,.5),0 8px 30px rgba(0,0,0,.4);
+    --glass-hi:rgba(255,255,255,.45);
+    --font-sans:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;
+    --font-display:"DotGothic16","Doto",ui-monospace,monospace;
+    --glow:0 0 0 1px rgba(255,255,255,.15),0 0 22px rgba(255,255,255,.32),0 0 44px rgba(255,255,255,.12);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{animation:none!important;transition:none!important} }
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:var(--font-sans);
+    font-size:15px; line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* Dim color field behind the whole page so glass panels have something to blur. */
+  body::before{
+    content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background:
+      radial-gradient(52% 38% at 22% 12%, rgba(146,110,180,.14), transparent 70%),
+      radial-gradient(46% 34% at 80% 30%, rgba(196,128,150,.10), transparent 70%),
+      radial-gradient(60% 44% at 55% 88%, rgba(232,168,124,.06), transparent 72%),
+      #000;
+  }
+  a{color:var(--accent-ink); text-decoration:none}
+  a:hover{text-decoration:underline}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 24px}
+
+  /* ---------- floating pill nav ---------- */
+  .topbar{position:fixed; top:0; left:0; right:0; z-index:50; display:flex; justify-content:center;
+    padding:clamp(12px,2vh,18px) 16px; pointer-events:none;
+    transition:opacity .35s, transform .35s}
+  /* v0.86 trial (owner request): pill nav hidden — the hero title carries the brand and the
+     page is one scroll anyway. Markup and the scroll handler stay; delete this line to bring
+     it back. The UPDATED date lives in the pill, so it is off-page while this trial runs. */
+  .topbar{display:none}
+  /* The pill belongs to the hero — once you scroll into the list it gets out of the way. */
+  .topbar.away{opacity:0; transform:translateY(-14px)}
+  .topbar.away .navpill{pointer-events:none}
+  /* Same dark-glass language as the hero trust pill — no solid white chrome over the scene. */
+  .navpill{--accent:#F0C29B; pointer-events:auto; display:flex; align-items:center; gap:2px;
+    background:rgba(30,24,34,.55); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,.28); border-radius:999px; padding:8px 16px 8px 15px;
+    box-shadow:inset 0 1px 1px rgba(255,255,255,.12), 0 4px 18px rgba(10,6,14,.25);
+    animation:slideDown .7s cubic-bezier(.22,1,.36,1) both}
+  .brand{display:flex; align-items:center; margin-right:12px}
+  /* brand mark = the three R/S/I rings, in the same glass language as the pill itself */
+  .navpill .tava{--ts:30px; padding:2px; background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.4)}
+  .navpill .tava i{background:transparent; color:#fff; font-size:13.5px}
+  .navpill .tava + .tava{margin-left:-10px}
+  .navpill nav{display:flex; align-items:center}
+  .navpill nav a{font-size:13px; font-weight:500; letter-spacing:-.01em; color:#E4E0E6; opacity:.62;
+    padding:6px 11px; border-radius:999px; white-space:nowrap; transition:opacity .15s}
+  .navpill nav a:hover{opacity:1; text-decoration:none}
+  .updated{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.04em; color:#B7B2BB;
+    border-left:1px solid rgba(255,255,255,.2); padding:2px 0 2px 15px; margin-left:10px; white-space:nowrap}
+  .updated b{color:#fff; font-weight:500}
+  @media(max-width:560px){ .navpill nav{display:none} }
+  #orgview .wrap{padding-top:84px}
+  #directory{scroll-margin-top:64px}
+
+  /* ---------- hero (full-viewport, luminous dune scene) ---------- */
+  .hero{position:relative; overflow:hidden;
+    display:flex; flex-direction:column;
+    /* v0.78: hero compressed to headline-height so the first viewport shows the title AND the
+       whole chart. Every scene layer (sky gradient, dunes, rain) is %-positioned, so shrinking
+       the hero pulls the pale band and the character rain up with it — the headline lands in
+       the dark zone below the crest and stays readable. */
+    justify-content:flex-end;
+    /* v0.87: title nudged ~40px down into the dark zone (owner marked the spot) — the shift
+       moved from bottom padding to top so the chart below stays where it was */
+    padding:clamp(130px,17vh,210px) 0 clamp(6px,1vh,14px)}   /* fold budget scales with viewport height */
+  .hero[hidden]{display:none}
+  /* sky: pale lavender top, warm horizon band, falling to black */
+  .hero::before{content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      radial-gradient(48% 18% at 74% 40%, rgba(246,182,140,.6), transparent 72%),
+      radial-gradient(38% 14% at 12% 34%, rgba(234,198,222,.55), transparent 72%),
+      linear-gradient(180deg,#ebe9f0 0%,#ded5e8 8%,#cdbad6 15%,#c1a0b8 21%,#a97f95 27%,#7c5468 34%,#412a3e 44%,#170e1e 58%,#000 86%)}
+  /* dunes: soft dark mounds with glowing rims, blurred into shape
+     (grain lives in .grain — a filter here would blur the noise away with it) */
+  .dunes{position:absolute; inset:-6%; pointer-events:none; filter:blur(8px);
+    animation:drift 40s ease-in-out infinite alternate;
+    background:
+      radial-gradient(28% 12% at 76% 34%, rgba(244,168,120,.4), transparent 66%),
+      radial-gradient(24% 10% at 16% 29%, rgba(234,200,226,.32), transparent 68%),
+      radial-gradient(56% 36% at 42% 54%, #180d1d 0%, #180d1d 52%, transparent 72%),
+      radial-gradient(46% 30% at 80% 62%, #2f151d 0%, #24101a 48%, transparent 70%),
+      radial-gradient(30% 15% at 86% 45%, rgba(164,92,78,.4), transparent 68%),
+      radial-gradient(74% 44% at 46% 88%, #050207 0%, #0d0610 56%, transparent 80%),
+      radial-gradient(110% 44% at 50% 108%, #04020a 0%, transparent 84%)}
+  /* the twilight rim glows breathe — slow swell along the light/dark boundary */
+  .dunes::before{content:""; position:absolute; inset:0;
+    background:
+      radial-gradient(32% 14% at 76% 34%, rgba(248,174,124,.55), transparent 68%),
+      radial-gradient(27% 12% at 16% 29%, rgba(238,204,230,.42), transparent 70%),
+      radial-gradient(34% 17% at 86% 45%, rgba(178,100,82,.5), transparent 68%);
+    animation:breathe 7.5s ease-in-out infinite alternate}
+  @keyframes breathe{from{opacity:.3; transform:translate3d(0,.5%,0) scale(1)}
+    to{opacity:1; transform:translate3d(0,-.7%,0) scale(1.035)}}
+  /* film grain over the whole scene — unblurred sibling so the noise stays crisp */
+  .grain{position:absolute; inset:0; pointer-events:none; mix-blend-mode:overlay; opacity:.95;
+    background:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMjAiIGhlaWdodD0iMjIwIj48ZmlsdGVyIGlkPSJuIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC41NSIgbnVtT2N0YXZlcz0iMyIvPjxmZUNvbG9yTWF0cml4IHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIxIDAgMCAwIDAgMCAxIDAgMCAwIDAgMCAxIDAgMCAwIDAgMCAwLjc1IDAiLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMjIwIiBoZWlnaHQ9IjIyMCIgZmlsdGVyPSJ1cmwoI24pIi8+PC9zdmc+')}
+  /* extra fine grain + fade to black so the list section takes over seamlessly */
+  .hero::after{content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      linear-gradient(180deg, transparent 0%, transparent 46%, rgba(0,0,0,.5) 74%, #000 96%),
+      url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDAiIGhlaWdodD0iMTQwIj48ZmlsdGVyIGlkPSJtIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMS4xIiBudW1PY3RhdmVzPSIyIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ibWF0cml4IiB2YWx1ZXM9IjAgMCAwIDAgMSAwIDAgMCAwIDEgMCAwIDAgMCAxIDAgMCAwIDAuMTQgMCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxNDAiIGhlaWdodD0iMTQwIiBmaWx0ZXI9InVybCgjbSkiLz48L3N2Zz4=')}
+  @keyframes drift{from{transform:translate3d(-1.5%,-.8%,0) scale(1)} to{transform:translate3d(1.5%,1%,0) scale(1.05)}}
+  /* dot-matrix character rain over the sky */
+  .rain{position:absolute; inset:0 0 52% 0; padding:14px 10px 0; pointer-events:none; overflow:hidden;
+    font-family:var(--font-display); font-weight:400; font-synthesis:none; color:#fff;
+    font-size:clamp(12px,1.05vw,17px); line-height:2.1; letter-spacing:.42em; white-space:pre;
+    text-shadow:0 1px 4px rgba(70,45,90,.3);
+    -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 58%,transparent 96%);
+    mask-image:linear-gradient(180deg,#000 0%,#000 58%,transparent 96%)}
+  .rain div{overflow:hidden}
+  @keyframes flick{50%{opacity:.08}}
+  .hero-inner{position:relative; z-index:1; width:100%; max-width:1280px; margin:0 auto; padding:0 24px;
+    display:flex; flex-direction:column; align-items:center; text-align:center}
+  /* trust row: overlapping avatar rings + dark pill, exactly A's language */
+  .trustrow{--ts:clamp(36px,4.5vw,42px); display:inline-flex; align-items:center;
+    margin-bottom:clamp(18px,3vh,30px)}
+  .tava{position:relative; width:var(--ts); height:var(--ts); border-radius:50%;
+    background:#28282a; border:1px solid rgba(255,255,255,.4); padding:5px; box-sizing:border-box;
+    transition:transform .35s}
+  .tava i{display:grid; place-items:center; width:100%; height:100%; border-radius:50%;
+    background:#fff; color:#111; font-style:normal; font-family:var(--font-display); font-weight:400; font-synthesis:none;
+    font-size:calc(var(--ts)*.28); line-height:1}
+  .tava + .tava{margin-left:calc(var(--ts)*-.42)}
+  .tava:nth-child(1){z-index:1} .tava:nth-child(2){z-index:2} .tava:nth-child(3){z-index:4}
+  .trustrow:hover .tava:nth-child(1){transform:translateY(-2px)}
+  .trustrow:hover .tava:nth-child(2){transform:translateY(-4px)}
+  .trustrow:hover .tava:nth-child(3){transform:translateY(-2px)}
+  .trustpill{display:inline-flex; align-items:center; height:var(--ts); z-index:3;
+    font-size:clamp(12px,1.4vw,13.5px); font-weight:500; color:#c4c2c3; white-space:nowrap;
+    background:#28282a; border:1px solid rgba(255,255,255,.4); border-radius:999px;
+    margin-left:calc(var(--ts)*-.42); padding-left:calc(var(--ts)*.58 + 4px); padding-right:18px}
+  .trustpill b{color:#fff; font-weight:600}
+  /* scoped to the hero — a bare `h1` selector also hit the detail page's .org-title and
+     centered the name over the wider founders line, leaving a blank block to its left */
+  .hero h1{margin:0; display:flex; flex-direction:column; align-items:center}
+  /* v0.77: headline moved off the dot-matrix face (owner: too informal to carry the page) to
+     Instrument Serif — the display serif the section headings already use. One line, never wrapped.
+     DotGothic16 stays for the scene texture (rain, avatars, rank numbers). */
+  h1 .hl{font-family:"Instrument Serif",Georgia,serif; font-weight:400; color:#fff;
+    font-size:clamp(17px,4.6vw,66px); line-height:1.12; letter-spacing:.005em; white-space:nowrap;
+    text-shadow:0 2px 18px rgba(20,10,30,.4);
+    opacity:0; transform:translateY(14px);
+    animation:headlineFade .85s cubic-bezier(.22,1,.36,1) forwards; animation-delay:var(--d,0s)}
+  @media(max-width:560px){ h1 .hl{font-size:4.6vw} }
+  .lede{max-width:56ch; color:#e2dfe4; opacity:.92; font-size:clamp(14.5px,1.55vw,17px); line-height:1.55; margin:0 0 30px;
+    text-shadow:0 1px 14px rgba(10,5,18,.55)}
+  .cta{display:inline-block; margin-top:clamp(24px,4.5vh,48px); color:#fff; font-weight:500;
+    background:rgba(30,24,34,.5); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,.32);
+    font-size:clamp(13.5px,1.5vw,14.5px); letter-spacing:-.01em;
+    padding:clamp(10px,1.5vh,12px) clamp(22px,3vw,28px); border-radius:999px;
+    box-shadow:inset 0 1px 1px rgba(255,255,255,.12);
+    transition:transform .2s, border-color .2s, background .2s}
+  .cta:hover{transform:translateY(-2px); text-decoration:none;
+    background:rgba(44,36,50,.6); border-color:rgba(255,255,255,.55)}
+  .statrow{position:relative; z-index:1; display:grid; grid-template-columns:repeat(4,1fr); gap:18px;
+    width:100%; max-width:920px; padding:0 24px; margin:clamp(34px,6vh,58px) auto 0}
+  @media(max-width:720px){ .statrow{grid-template-columns:repeat(2,1fr); gap:26px 18px} }
+  .stat{display:flex; flex-direction:column; align-items:center; gap:5px}
+  .stat-ico{font-family:var(--font-display); font-weight:400; font-synthesis:none; font-size:clamp(20px,3vw,30px); color:#fff; line-height:1}
+  .stat-val{font-size:clamp(18px,2.2vw,26px); font-weight:600; letter-spacing:-.025em; font-variant-numeric:tabular-nums; color:#fff}
+  .stat-label{font-size:clamp(11px,1.2vw,12.5px); color:var(--muted)}
+  /* entrance + scroll-reveal */
+  .anim{opacity:0; transform:translateY(22px) scale(.98); filter:blur(6px);
+    animation:reveal .85s cubic-bezier(.22,1,.36,1) forwards; animation-delay:var(--d,0s)}
+  @keyframes reveal{to{opacity:1; transform:none; filter:none}}
+  @keyframes headlineFade{to{opacity:1; transform:none}}
+  @keyframes slideDown{from{opacity:0; transform:translateY(-18px)} to{opacity:1; transform:none}}
+  .sr{opacity:0; transform:translateY(18px); transition:opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1)}
+  .sr.in{opacity:1; transform:none}
+  @media (prefers-reduced-motion: reduce){
+    .anim, h1 .hl, .sr{opacity:1; transform:none; filter:none}
+  }
+
+  /* ---------- about note ---------- */
+  /* Faint aurora washes behind the content sections — the glass panels need
+     coloured light behind them or backdrop-blur has nothing to show. */
+  #directory, #orgview, #takeoff{position:relative}
+  /* aurora washes feed the glass panels; the takeoff section lost its glass in v0.70 and the
+     wash was reading as a tint seam against the hero — so no ::before there */
+  #directory::before, #orgview::before{content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      radial-gradient(42% 26% at 14% 16%, rgba(158,112,196,.09), transparent 70%),
+      radial-gradient(38% 22% at 88% 42%, rgba(216,128,152,.07), transparent 70%),
+      radial-gradient(40% 22% at 30% 66%, rgba(120,96,190,.06), transparent 72%),
+      radial-gradient(46% 24% at 60% 94%, rgba(232,168,124,.05), transparent 72%)}
+  #directory .wrap, #orgview .wrap, #takeoff .wrap{position:relative; max-width:1420px}
+  /* liquid-glass panel recipe: translucent fill + deep blur + gradient edge (bright top/bottom) */
+  .note, .card, .meth{position:relative; overflow:hidden;
+    background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.025));
+    backdrop-filter:blur(18px) saturate(120%); -webkit-backdrop-filter:blur(18px) saturate(120%);
+    box-shadow:inset 0 1px 1px rgba(255,255,255,.12), 0 24px 60px rgba(0,0,0,.55)}
+  .note::before, .card::before, .meth::before{content:""; position:absolute; inset:0; border-radius:inherit; padding:1.4px;
+    background:linear-gradient(180deg, var(--glass-hi) 0%, rgba(255,255,255,.15) 20%, rgba(255,255,255,0) 40%,
+      rgba(255,255,255,0) 60%, rgba(255,255,255,.15) 80%, var(--glass-hi) 100%);
+    -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none}
+  .note{margin:26px 0 0; padding:18px 20px; border:none; border-radius:16px}
+  /* the About block sheds its glass shell — plain copy, flush with the takeoff caption above it */
+  #about{background:none; box-shadow:none; backdrop-filter:none; -webkit-backdrop-filter:none; margin:0; padding:0; overflow:visible}
+  #about p{max-width:none}
+  #about::before{display:none}
+
+  /* ---------- takeoff: capital, rounds and shipped results on one time axis ---------- */
+  #takeoff{padding:clamp(14px,5vh,56px) 0 0; scroll-margin-top:64px}
+  #takeoff[hidden]{display:none}
+  .takeoff{margin:0}
+  .tk-caption{margin:30px 0 0}
+  .tk-caption h3{margin:0 0 6px; font-size:12px; font-family:"IBM Plex Mono",monospace; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-ink)}
+  .takeoff h2{font-size:clamp(20px,2.3vw,26px); margin:2px 0 6px}
+  .tk-sub{color:var(--muted); font-size:14px; margin:0 0 10px}
+  .tk-sub b{color:var(--ink); font-weight:500}
+  .tk-chart{overflow-x:auto; overflow-y:hidden}
+  .tk-chart svg{display:block; width:100%; min-width:760px; height:auto}
+  .tk-chart svg text{font-family:"IBM Plex Mono",monospace}
+  .tk-chart svg text.halo{paint-order:stroke fill; stroke:#0e0d10; stroke-width:4px; stroke-linejoin:round}
+  .tk-chart svg .ann{transition:opacity .16s ease}
+  .tk-chart svg g.ann text{pointer-events:none}   /* hover falls through to the hit rect beneath */
+  .tk-chart svg.tk-dim .ann{opacity:.16}
+  .tk-chart svg.tk-dim .ann.hot{opacity:1}
+  /* growth animation: on first view the curve sweeps out left→right (a clipPath rect driven by
+     rAF over ~5s) and each mark/stem/label pops in as the sweep passes its node. .tk-pre needs
+     !important — hover's .tk-dim .ann.hot out-specifies it and would reveal labels early. */
+  .tk-chart svg .tk-pre{opacity:0 !important; pointer-events:none}
+  .tk-chart svg.tk-growing .ann, .tk-chart svg.tk-growing .mark, .tk-chart svg.tk-growing .tk-end{transition:opacity .45s ease}
+  .tk-chart .mark{cursor:pointer; outline:none}
+  .tk-chart .mark:hover .m, .tk-chart .mark:focus-visible .m{filter:brightness(1.3)}
+  .tk-chart .mark:focus-visible .m{stroke:#fff}
+  .tk-chart .mark:hover rect, .tk-chart .mark:focus-visible rect{fill:rgba(255,255,255,.07)}
+  .tk-tip{position:fixed; z-index:30; pointer-events:none; display:none; max-width:290px;
+    background:#0b0a0d; border:1px solid var(--line); border-radius:8px; padding:8px 11px;
+    font-size:12.5px; line-height:1.45; box-shadow:0 8px 28px rgba(0,0,0,.6)}
+  .tk-tip .d{font-family:"IBM Plex Mono",monospace; color:var(--accent-ink); font-size:11px; letter-spacing:.06em}
+  .tk-tip .c{font-weight:600; color:var(--ink)}
+  .tk-tip .e{color:var(--muted)}
+  .tk-foot{color:var(--faint); font-size:12.5px; margin:12px 0 0; line-height:1.5}
+  .takeoff details{margin-top:12px; border-top:1px solid var(--line-soft); padding-top:10px}
+  .takeoff summary{cursor:pointer; color:var(--muted); font-size:12px; font-family:"IBM Plex Mono",monospace; letter-spacing:.06em}
+  .tk-table{overflow-x:auto; margin-top:10px}
+  .tk-table table{border-collapse:collapse; font-size:13px; width:100%}
+  .tk-table th, .tk-table td{text-align:left; padding:5px 14px 5px 0; border-bottom:1px solid var(--line-soft); vertical-align:top}
+  .tk-table th{color:var(--faint); font-family:"IBM Plex Mono",monospace; font-weight:500; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase}
+  .tk-table td.mono{font-family:"IBM Plex Mono",monospace; color:var(--muted); white-space:nowrap}
+  .tk-table a{color:var(--ink)}
+  .note h3{margin:0 0 6px; font-size:12px; font-family:"IBM Plex Mono",monospace; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-ink)}
+  .note p{margin:0; color:var(--muted); font-size:14px; max-width:100ch}
+  .note p + p{margin-top:9px}
+  .note ul{margin:9px 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:6px}
+  .note li{color:var(--muted); font-size:14px; max-width:100ch; padding-left:14px; position:relative}
+  .note li::before{content:"→"; position:absolute; left:0; color:var(--accent); font-size:12px}
+  .note li b{color:var(--ink); font-weight:600}
+
+  /* ---------- sections ---------- */
+  section{padding:44px 0 8px}
+  h2{font-weight:600; font-size:27px; margin:0 0 6px; letter-spacing:-.02em}
+  h2 em{font-family:"Instrument Serif",Georgia,serif; font-style:italic; font-weight:400; letter-spacing:0}
+  .sect-sub{color:var(--muted); font-size:14.5px; margin:0 0 20px; max-width:82ch}
+
+  .rank-note{font-size:13px; color:var(--faint); max-width:100ch; margin:0 0 4px; line-height:1.55}
+  .note .rank-note{margin:0 0 2px}
+  .rank-note-label{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.11em; text-transform:uppercase;
+    color:var(--accent-ink); margin-right:8px}
+
+  tr.group td{background:var(--chip); color:var(--faint); font-family:"IBM Plex Mono",monospace; font-size:10px;
+    letter-spacing:.13em; text-transform:uppercase; padding:7px 12px; border-bottom:1px solid var(--line)}
+
+  /* ---------- controls ---------- */
+  .controls{display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:18px 0 14px}
+  .search{flex:1 1 200px; min-width:180px; max-width:320px; position:relative}
+  .search input{width:100%; padding:8px 12px 8px 30px; border:1px solid var(--line); border-radius:999px;
+    background:rgba(255,255,255,.05); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    box-shadow:inset 0 1px 1px rgba(255,255,255,.08); color:var(--ink); font:inherit; font-size:13.5px}
+  .search input:focus{outline:2px solid var(--accent); outline-offset:-1px}
+  .search::before{content:"⌕"; position:absolute; left:10px; top:50%; transform:translateY(-52%); color:var(--faint); font-size:15px}
+  select{padding:8px 12px; border:1px solid var(--line); border-radius:999px;
+    background:rgba(255,255,255,.05); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    box-shadow:inset 0 1px 1px rgba(255,255,255,.08); color:var(--ink); font:inherit; font-size:13px}
+  select:focus{outline:2px solid var(--accent); outline-offset:-1px}
+  .seg-tabs{display:flex; gap:0; border:1px solid var(--line); border-radius:999px; overflow:hidden;
+    background:rgba(255,255,255,.05); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    box-shadow:inset 0 1px 1px rgba(255,255,255,.08)}
+  .seg-tabs button, .view-tabs button{border:0; background:transparent; color:var(--muted); font-family:"IBM Plex Mono",monospace; font-size:11.5px; letter-spacing:.04em; padding:8px 12px; cursor:pointer}
+  .seg-tabs button + button{border-left:1px solid var(--line)}
+  /* Controls use a neutral high-contrast selected state; the accent/green family is
+     reserved for the category badges so a selected tab never reads as an RSI badge. */
+  .seg-tabs button[aria-pressed="true"], .view-tabs button[aria-pressed="true"]{background:var(--ink); color:var(--paper)}
+  .seg-tabs button:not([aria-pressed="true"]):hover, .view-tabs button:not([aria-pressed="true"]):hover{color:var(--ink); background:var(--chip)}
+  .seg-tabs button:focus-visible, .view-tabs button:focus-visible, .btn:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+  .view-tabs{display:flex; border:1px solid var(--line); border-radius:999px; overflow:hidden;
+    background:rgba(255,255,255,.05); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    box-shadow:inset 0 1px 1px rgba(255,255,255,.08)}
+  .view-tabs button + button{border-left:1px solid var(--line)}
+  .btn{border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:6px; padding:8px 12px; font-family:"IBM Plex Mono",monospace; font-size:11.5px; letter-spacing:.04em; cursor:pointer}
+  .btn:hover{border-color:var(--accent); color:var(--accent-ink)}
+  .btn.primary{background:var(--accent); border-color:var(--accent); color:#2A1508}
+  .count{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--muted); margin:2px 0 10px}
+  .count b{color:var(--ink); font-weight:500}
+  .countrow{display:flex; align-items:baseline; flex-wrap:wrap; gap:0 4px}
+  .filter-row{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin:2px 0 4px}
+  /* Squared + mid-tone = a label. Rounded pills are the clickable things. */
+  .filter-label{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.13em; text-transform:uppercase;
+    padding:5px 11px; border-radius:5px; background:var(--muted); color:var(--paper); white-space:nowrap}
+  .chips{display:flex; flex-wrap:wrap; gap:6px}
+  .chips button{border:1px solid var(--line); background:rgba(255,255,255,.05);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    box-shadow:inset 0 1px 1px rgba(255,255,255,.07); color:var(--muted); border-radius:99px;
+    padding:4px 12px; font-size:12.5px; cursor:pointer; font-family:inherit;
+    display:inline-flex; align-items:baseline; gap:7px; transition:border-color .12s, color .12s}
+  .chips button .n{font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:var(--faint); font-variant-numeric:tabular-nums}
+  .chips button:hover{border-color:rgba(255,255,255,.34); color:var(--ink)}
+  .chips button[aria-pressed="true"]{background:rgba(255,255,255,.10); border-color:rgba(255,255,255,.38); color:#ECECEC}
+  .chips button[aria-pressed="true"] .n{color:#CFCFCF}
+  .chips button:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+
+  /* ---------- table ---------- */
+  .tablewrap{overflow-x:auto; border:1px solid rgba(255,255,255,.16); border-radius:16px;
+    background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.02));
+    backdrop-filter:blur(18px) saturate(120%); -webkit-backdrop-filter:blur(18px) saturate(120%);
+    box-shadow:inset 0 1px 1px rgba(255,255,255,.12), 0 24px 60px rgba(0,0,0,.55)}
+  table{border-collapse:collapse; width:100%; min-width:940px}
+  thead th{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.07em; text-transform:uppercase; color:var(--faint); text-align:left; padding:9px 8px; border-bottom:1px solid var(--line); white-space:nowrap; background:var(--surface)}
+  tbody td{padding:9px 8px; border-bottom:1px solid var(--line-soft); vertical-align:top}
+  tbody tr.row{cursor:pointer}
+  tbody tr.row:hover td{background:var(--accent-wash)}
+  tbody tr:last-child td{border-bottom:0}
+  .ranknum{font-family:var(--font-display); font-size:14px; color:var(--accent-ink); font-weight:400; font-synthesis:none; white-space:nowrap}
+  .ranknum.nr{color:var(--faint); font-weight:400}
+  .orgname{font-weight:600; font-size:14px; color:var(--ink)}
+  .orgsub{font-size:11.5px; color:var(--muted); margin-top:1px}
+  .num{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-size:12.5px; max-width:120px}
+  .num small{color:var(--faint); font-size:11px}
+  .hqcell{font-size:12px; color:var(--muted); max-width:130px}
+  .caret{color:var(--faint); font-size:11px; display:inline-block; transition:transform .15s; margin-right:2px}
+  tr.open .caret{transform:rotate(90deg)}
+  tr.detail td{background:var(--accent-wash); padding:14px 16px 16px 40px; border-bottom:1px solid var(--line)}
+  .detail-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px 28px; max-width:960px}
+  @media(max-width:760px){ .detail-grid{grid-template-columns:1fr} }
+  .detail-grid h4{margin:0 0 3px; font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); font-weight:500}
+  .detail-grid p{margin:0; font-size:13.5px; color:var(--ink)}
+  .src{font-size:12px; color:var(--muted)}
+  .src a{margin-right:12px}
+
+  /* badges */
+  .b-seg{display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:9.5px; letter-spacing:.07em; padding:2.5px 7px; border-radius:4px; border:1px solid var(--line); color:var(--muted); white-space:nowrap; text-transform:uppercase}
+  .b-seg.pure{border-color:rgba(232,168,124,.4); color:var(--accent-ink); background:var(--accent-soft)}
+  .b-seg.radar{border-style:dashed; color:var(--faint)}
+  .b-dom{display:inline-block; font-size:11px; padding:2px 8px; border-radius:99px; background:var(--chip); color:var(--muted); margin:1px 3px 1px 0; white-space:nowrap}
+  .b-oss{display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:9.5px; letter-spacing:.05em; padding:2.5px 6px; border-radius:4px; background:var(--chip); color:var(--muted)}
+  .b-tier{display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:9px; letter-spacing:.04em; padding:2px 6px; border-radius:4px; white-space:nowrap}
+  .b-tier.core{background:var(--accent-soft); color:var(--accent-ink); border:1px solid rgba(232,168,124,.4)}
+  .b-tier.self{border:1px solid rgba(232,168,124,.3); color:#D9B295; background:transparent}
+  .b-tier.enable{background:var(--chip); color:var(--muted); border:1px dashed var(--line)}
+  .conf-dot{font-size:13px; line-height:1}
+  .conf-hi{color:var(--accent)} .conf-med{color:var(--warn)} .conf-lo{color:var(--faint)}
+
+  /* ---------- cards ---------- */
+  .cards{display:grid; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)); gap:14px}
+  .card{border:none; border-radius:12px; padding:18px 18px 14px; display:flex; flex-direction:column; gap:9px}
+  .card-top{display:flex; align-items:baseline; gap:10px}
+  .card-top .ranknum{font-size:14px}
+  .card h3{margin:0; font-size:17px; font-weight:600; letter-spacing:-.01em}
+  .card h3 a{color:var(--ink)}
+  .card .loop{font-size:13.5px; color:var(--muted); margin:0; flex:1}
+  .card-badges{display:flex; flex-wrap:wrap; gap:5px; align-items:center}
+  .card-stats{display:grid; grid-template-columns:repeat(3,auto); gap:4px 18px; border-top:1px solid var(--line-soft); padding-top:10px}
+  .card-stats div{min-width:0}
+  .card-stats h4{margin:0; font-family:"IBM Plex Mono",monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); font-weight:500}
+  .card-stats p{margin:1px 0 0; font-family:"IBM Plex Mono",monospace; font-size:12.5px; font-variant-numeric:tabular-nums; white-space:nowrap}
+  .card .src{border-top:1px solid var(--line-soft); padding-top:8px}
+
+  /* ---------- ladder ---------- */
+  .ladder{display:grid; gap:0; border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--surface); box-shadow:var(--shadow)}
+  .rung{display:grid; grid-template-columns:110px 1fr; border-bottom:1px solid var(--line-soft)}
+  .rung:last-child{border-bottom:0}
+  .rung-l{padding:16px; display:flex; flex-direction:column; gap:4px; align-items:flex-start; border-right:1px solid var(--line-soft)}
+  .rung-l .lvl{font-family:"IBM Plex Mono",monospace; font-weight:500; font-size:15px}
+  .rung-r{padding:16px 18px}
+  .rung-r h3{margin:0 0 3px; font-size:15px; font-weight:600}
+  .rung-r p{margin:0 0 7px; font-size:13.5px; color:var(--muted); max-width:88ch}
+  .rung-r .ex{display:flex; flex-wrap:wrap; gap:5px}
+  .rung-r .ex span{font-size:11.5px; background:var(--chip); border-radius:99px; padding:2px 9px; color:var(--muted)}
+  @media(max-width:620px){ .rung{grid-template-columns:1fr} .rung-l{border-right:0; border-bottom:1px dashed var(--line-soft); flex-direction:row; align-items:center} }
+
+  /* ---------- timeline ---------- */
+  .ver-chips{display:flex; flex-wrap:wrap; gap:3px}
+  .ver-chips button{border:1px solid var(--line); background:var(--surface); color:var(--faint); border-radius:99px;
+    padding:1.5px 7px; font-family:"IBM Plex Mono",monospace; font-size:9.5px; cursor:pointer; transition:all .1s}
+  .ver-chips button:hover{border-color:rgba(255,255,255,.34); color:var(--ink)}
+  .ver-chips button[aria-pressed="true"]{background:rgba(255,255,255,.10); border-color:rgba(255,255,255,.38); color:#ECECEC}
+  .ver-chips button:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+  /* v0.88: tags are fixed data — read-only spans, the click-to-toggle editor is gone.
+     v0.91: all five chips render again; the org's tags are lit, the rest greyed (.off). */
+  .tag-chips{display:flex; flex-wrap:wrap; gap:3px; width:158px}
+  .tag-chips .tagchip{border:1px solid rgba(255,255,255,.38); background:rgba(255,255,255,.10); color:#ECECEC;
+    border-radius:99px; padding:1.5px 7px; font-family:"IBM Plex Mono",monospace; font-size:9.5px; white-space:nowrap}
+  .tag-chips .tagchip.off{border-color:var(--line-soft); background:transparent; color:var(--faint); opacity:.55}
+  /* ---------- org detail page ---------- */
+  .backlink{display:inline-flex; align-items:center; gap:7px; font-family:"IBM Plex Mono",monospace; font-size:11.5px;
+    letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:26px}
+  .backlink:hover{color:var(--accent-ink); text-decoration:none}
+  .org-head{display:flex; align-items:flex-start; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:22px}
+  .org-title{font-weight:600; font-size:clamp(26px,3.6vw,38px);
+    line-height:1.1; margin:0 0 6px; letter-spacing:-.02em}
+  .org-people{color:var(--muted); font-size:14.5px; max-width:62ch}
+  .org-marks{display:flex; align-items:center; gap:9px; flex-wrap:wrap; padding-top:6px}
+  .org-marks .ranknum{font-size:15px}
+  .factgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:1px;
+    background:var(--line); border:1px solid var(--line); border-radius:16px; overflow:hidden; margin-bottom:30px;
+    backdrop-filter:blur(18px) saturate(120%); -webkit-backdrop-filter:blur(18px) saturate(120%);
+    box-shadow:0 24px 60px rgba(0,0,0,.5)}
+  .factgrid div{background:var(--surface); padding:13px 15px}
+  .factgrid h4{margin:0 0 3px; font-family:"IBM Plex Mono",monospace; font-size:9.5px; letter-spacing:.11em;
+    text-transform:uppercase; color:var(--faint); font-weight:500}
+  .factgrid p{margin:0; font-family:"IBM Plex Mono",monospace; font-size:13.5px; font-variant-numeric:tabular-nums; color:var(--ink)}
+  .org-sec{margin-bottom:28px; max-width:80ch}
+  .org-sec h3{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.11em; text-transform:uppercase;
+    color:var(--accent-ink); font-weight:500; margin:0 0 9px}
+  .org-sec p{margin:0; font-size:15px; color:var(--ink); line-height:1.6}
+  sup.ref{font-size:9.5px; line-height:0; margin-left:2px}
+  sup.ref a{color:var(--accent-ink); font-family:"IBM Plex Mono",monospace}
+  .tl-empty{font-size:14px; color:var(--faint); font-style:italic}
+  .tl-item .tl-src{font-size:12px; margin-top:4px}
+  .timeline{border-left:2px solid var(--line); margin-left:6px; padding-left:22px; display:flex; flex-direction:column; gap:18px; max-width:860px}
+  .tl-item{position:relative}
+  .tl-item::before{content:""; position:absolute; left:-28.5px; top:5px; width:11px; height:11px; border-radius:50%; background:var(--paper); border:2.5px solid var(--accent)}
+  .tl-date{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--accent-ink); letter-spacing:.05em}
+  .tl-item h3{margin:2px 0 2px; font-size:15px; font-weight:600}
+  .tl-item p{margin:0; font-size:13.5px; color:var(--muted); max-width:80ch}
+
+  /* ---------- oss strip ---------- */
+  .oss-strip{display:flex; flex-wrap:wrap; gap:8px}
+  .oss-strip a{display:inline-flex; align-items:center; gap:7px; border:1px solid var(--line); background:var(--surface); border-radius:99px; padding:6px 14px; font-size:13px; color:var(--ink)}
+  .oss-strip a:hover{border-color:var(--accent); text-decoration:none; color:var(--accent-ink)}
+  .oss-strip .who{font-family:"IBM Plex Mono",monospace; font-size:10.5px; color:var(--faint)}
+
+  /* ---------- methodology ---------- */
+  .meth-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:14px}
+  .meth{border:none; border-radius:12px; padding:18px}
+  .meth h3{margin:0 0 8px; font-size:13px; font-family:"IBM Plex Mono",monospace; letter-spacing:.08em; text-transform:uppercase; color:var(--accent-ink); font-weight:500}
+  .meth p, .meth li{font-size:13.5px; color:var(--muted); margin:0 0 6px}
+  .meth ul{margin:0; padding-left:18px}
+  .meth b{color:var(--ink); font-weight:600}
+
+  /* ---------- reading ---------- */
+  .reading{columns:2; column-gap:40px; max-width:960px}
+  @media(max-width:700px){ .reading{columns:1} }
+  .reading li{break-inside:avoid; margin:0 0 10px; font-size:13.5px; color:var(--muted); list-style:none}
+  .reading .mono{font-size:11px; color:var(--faint)}
+  .reading ul{padding:0;margin:0}
+
+  footer{margin-top:56px; border-top:1px solid var(--line); padding:28px 0 48px; color:var(--faint); font-size:12.5px}
+  footer .wrap{display:flex; flex-wrap:wrap; gap:10px 40px; justify-content:space-between}
+  footer p{margin:0 0 6px; max-width:70ch}
+  footer .contrib a{color:var(--muted); text-decoration:none}
+  footer .contrib a:hover{color:var(--ink); text-decoration:underline}
+</style>
+
+<header class="topbar">
+  <div class="navpill">
+    <span class="brand" aria-label="RSI List">
+      <span class="tava"><i>R</i></span><span class="tava"><i>S</i></span><span class="tava"><i>I</i></span>
+    </span>
+    <nav>
+      <a href="#takeoff" class="navlink">Takeoff</a>
+      <a href="#directory" class="navlink">Directory</a>
+      <a href="#about" class="navlink">About</a>
+    </nav>
+    <span class="updated">UPDATED <b>2026-09-02</b></span>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="dunes" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="rain" aria-hidden="true"></div>
+  <div class="hero-inner">
+    <h1>
+      <span class="hl" style="--d:.12s">The recursive self-improvement landscape</span>
+    </h1>
+  </div>
+</section>
+
+<section id="takeoff">
+  <div class="wrap">
+    <div class="takeoff sr">
+      <div class="tk-chart" id="tk-chart"></div>
+      <div class="tk-caption">
+        <h3>The takeoff</h3>
+        <p class="tk-sub" id="tk-sub"></p>
+        <p class="tk-foot" id="tk-foot"></p>
+        <details><summary>data table</summary><div class="tk-table" id="tk-table"></div></details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="directory">
+  <div class="wrap">
+    <div class="note sr" id="about">
+      <h3>About this directory</h3>
+      <p>Recursive self-improvement (RSI) — AI improving the process of building AI itself — is a new frontier, and it may decide how fast everything else in AI moves. No one has closed the loop yet. This list is a framework for tracking that progress.</p>
+      <p>Companies are working toward it from different angles, and it is no longer only a frontier-lab game: small teams with tight loops can make AI evolve remarkably fast.</p>
+    </div>
+    <h2 style="margin-top:44px"><em>Directory</em></h2>
+    <div class="controls">
+      <div class="search"><input id="q" type="search" placeholder="Search organizations, people…" aria-label="Search"></div>
+      <div class="seg-tabs" id="tagtabs" role="group" aria-label="Tag filter"></div>
+      <select id="sort" aria-label="Sort">
+        <option value="rank">Sort: RSI rank</option>
+        <option value="raised">Sort: Raised</option>
+        <option value="valuation">Sort: Valuation</option>
+        <option value="founded">Sort: Newest</option>
+        <option value="name">Sort: Name A–Z</option>
+      </select>
+      <div class="view-tabs" role="group" aria-label="View">
+        <button id="v-table" aria-pressed="true">Table</button>
+        <button id="v-cards" aria-pressed="false">Cards</button>
+      </div>
+    </div>
+    <div class="filter-row">
+      <span class="filter-label">Country</span>
+      <div class="chips" id="countrychips" role="group" aria-label="Country filter"></div>
+    </div>
+    <div class="count countrow"><span id="count"></span></div>
+    <div id="listmount"></div>
+  </div>
+</section>
+
+<section id="orgview" hidden><div class="wrap"></div></section>
+
+<footer>
+  <div class="wrap">
+    <p class="mono">RSI LIST · 2026</p>
+    <p class="mono contrib">CONTRIBUTORS ·
+      <a href="https://jinyansu1.github.io/" target="_blank" rel="noopener">Jinyan Su</a> ·
+      <a href="https://x.com/tangjiabin7" target="_blank" rel="noopener">Jiabin Tang</a> ·
+      <a href="https://x.com/chadshi_1" target="_blank" rel="noopener">Yu Shi</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+const DATA = [
+// ---------------- PURE-PLAY (ranked) ----------------
+{rank:1, name:"Sakana AI", country:"Japan", stage:"Series B", refs:{"stage":[2],"raised":[4,5,2],"val":[2],"head":[3,6],"founded":[3],"hq":[2]}, head:"51–200", headC:"med", url:"https://sakana.ai/rsi-lab/", seg:"pure", dom:["AI Research"], lvl:3, target:4,
+ loop:"A dedicated RSI Lab where agents evolve their own code and training algorithms (Darwin Gödel Machine, ShinkaEvolve) while the AI Scientist runs end-to-end research — published in Nature, March 2026.",
+ flagship:"AI Scientist · Darwin Gödel Machine", people:"David Ha, Llion Jones, Ren Ito", founded:2023, hq:"Tokyo, Japan",
+ raised:412, raisedD:"~$412M", raisedC:"hi", val:2.65, valD:"$2.65B", valC:"hi", oss:true,
+ note:"The strongest public evidence base in the category: peer-reviewed, open-sourced, and reproduced. Official Series B disclosure puts cumulative funding at \u00a566B (~$412M) across seed, Series A and Series B.",
+ sources:[["Sakana RSI Lab","https://sakana.ai/rsi-lab/"],["Series B $135M @ $2.65B · 2025-11","https://sakana.ai/series-b/"],["LinkedIn company page","https://www.linkedin.com/company/sakana-ai/"],["$30M seed · 2024-01","https://sakana.ai/seed-round/"],["Series A · 2024-09","https://sakana.ai/series-a/"],["PitchBook profile","https://pitchbook.com/profiles/company/537652-45"]]},
+
+{rank:2, name:"Ineffable Intelligence", country:"UK", stage:"Seed", refs:{"stage":[1],"raised":[1],"val":[1],"head":[3],"founded":[1],"hq":[1]}, head:"11–50", headC:"med", url:"https://techcrunch.com/2026/04/27/deepminds-david-silver-just-raised-1-1b-to-build-an-ai-that-learns-without-human-data/", seg:"pure", dom:["AI Research","Continual Learning"], lvl:0, target:4,
+ loop:"A \"superlearner\" that discovers knowledge and skills without human data \u2014 pure reinforcement learning from its own experience, from elementary motor skills to intellectual breakthroughs. Pre-product.",
+ flagship:"Superlearner (unreleased)", people:"David Silver (ex-DeepMind RL lead; AlphaGo/AlphaZero)", founded:2025, hq:"London, UK",
+ raised:1100, raisedD:"$1.1B", raisedC:"hi", val:5.1, valD:"$5.1B", valC:"hi", oss:false,
+ note:"Europe's largest-ever seed (2026-04): Sequoia + Lightspeed co-led, Nvidia in for $250M+, with DST, Index, Google and the UK Sovereign AI Fund. The AlphaZero self-play lineage taken to its limit.",
+ sources:[["TechCrunch \u00b7 2026-04","https://techcrunch.com/2026/04/27/deepminds-david-silver-just-raised-1-1b-to-build-an-ai-that-learns-without-human-data/"],["CNBC \u00b7 2026-04","https://www.cnbc.com/2026/04/27/deepmind-ineffable-intelligence-record-seed-funding-nvidia-google.html"],["LinkedIn company page","https://uk.linkedin.com/company/ineffable-intelligence"]]},
+
+{rank:3, name:"Recursive Superintelligence", country:"USA", stage:"Series A", refs:{"stage":[3],"raised":[1],"val":[1],"head":[1],"founded":[1],"hq":[1]}, head:"11–50", headC:"med", url:"https://thenextweb.com/news/recursive-superintelligence-self-improving-ai-funding", seg:"pure", dom:["AI Research"], lvl:0, target:4,
+ loop:"Automated ideation → implementation → validation for AI research; a \"Level 1\" autonomous training system slated for mid-2026. Pre-product.",
+ flagship:"Autonomous training system (unreleased)", people:"Richard Socher + 8 co-founders (Tian, Rocktäschel, Dosovitskiy, Tobin, Xiong, Shi, Clune); Norvig advising", founded:2026, hq:"San Francisco + London",
+ raised:650, raisedD:"$650M", raisedC:"hi", val:4.65, valD:"$4.65B", valC:"hi", oss:false,
+ note:"The largest dedicated RSI bet: <30 people, backed by GV, Nvidia, AMD, Greycroft. First-phase goal: research capacity equivalent to \"50,000 doctors\".",
+ sources:[["TNW · 2026-05","https://thenextweb.com/news/recursive-superintelligence-self-improving-ai-funding"],["TechCrunch · 2026-05","https://techcrunch.com/2026/05/14/what-happens-when-ai-starts-building-itself/"],["Crunchbase profile","https://www.crunchbase.com/organization/recursive-superintelligence"]]},
+
+{rank:5, name:"Lila Sciences", country:"USA", stage:"Series A", refs:{"stage":[1],"raised":[1,2],"val":[2],"head":[4],"founded":[2],"hq":[2]}, head:"201\u2013500", headC:"med", url:"https://www.lila.ai", seg:"pure", dom:["Science"], lvl:2, target:3,
+ loop:"AI science factories: models propose experiments, autonomous wet labs run them, and results feed back into training — targeting scientific superintelligence for materials, chemistry, and life science.",
+ flagship:"AI Science Factories", people:"Flagship Pioneering (Geoffrey von Maltzahn, Molly Gibson)", founded:2023, hq:"Cambridge, MA, USA",
+ raised:550, raisedD:"$550M", raisedC:"hi", val:1.3, valD:">$1.3B", valC:"med", oss:false,
+ note:"Seed $200M (2025-03) + Series A $350M; hubs in Boston, SF, London.",
+ sources:[["Series A close","https://www.lila.ai/news/announcing-the-close-of-our-series-a"],["HPCwire · 2025-09","https://www.hpcwire.com/2025/09/15/lila-sciences-nabs-235-million-to-build-scientific-superintelligence/"],["Headcount report · LinkedIn 2026","https://www.linkedin.com/posts/alexandrealvesneves_exclusive-lila-sciences-is-closing-in-on-activity-7372680917456318464-lXxE"],["LinkedIn company page","https://www.linkedin.com/company/lila-sciences/"]]},
+
+{rank:4, name:"Periodic Labs", country:"USA", stage:"Series A", refs:{"stage":[3],"raised":[3],"val":[3],"head":[4],"founded":[4],"hq":[4]}, head:"11–50", headC:"med", url:"https://periodic.com", seg:"pure", dom:["Science"], lvl:2, target:3,
+ loop:"AI scientists paired with robotic physics and chemistry labs — experiments generate the proprietary data that trains the next, better scientist model.",
+ flagship:"Autonomous physical-science labs", people:"Liam Fedus (ex-OpenAI VP Research), Ekin Doğuş Çubuk (ex-Google Brain)", founded:2025, hq:"Menlo Park, CA, USA",
+ raised:1070, raisedD:"$1.07B", raisedC:"med", val:7.5, valD:"$7.5B", valC:"med", oss:false,
+ note:"Series A closed 2026-06 per private-market financing records (~$808M in tranches at $7.5B) while press still described the round as in talks. Backers include a16z, Accel, NVentures, Bezos, Schmidt.",
+ sources:[["Launch $300M · 2025-10","https://www.maginative.com/article/periodic-labs-launches-with-300m-to-build-an-ai-scientist/"],["Forbes · 2026-05","https://www.forbes.com/sites/iainmartin/2026/05/07/former-openai-researcher-to-raise-500-million-for-ai-science-startup/"],["Forge financing history","https://forgeglobal.com/periodic-labs_ipo/"],["LinkedIn company page","https://www.linkedin.com/company/periodic-labs"]]},
+
+{rank:6, name:"Edison Scientific", country:"USA", stage:"Seed", refs:{"stage":[2],"raised":[1,2,3],"val":[2],"head":[4],"founded":[3],"hq":[3]}, head:"51\u2013200", headC:"med", url:"https://edisonscientific.com", seg:"pure", dom:["Science"], lvl:2, target:3,
+ loop:"Kosmos runs multi-week autonomous discovery campaigns — reading literature, analyzing data, and compounding findings across cycles far beyond a single session.",
+ flagship:"Kosmos (AI scientist)", people:"Sam Rodriques (FutureHouse spinout)", founded:2025, hq:"San Francisco, USA",
+ raised:70, raisedD:"$70M", raisedC:"hi", val:0.25, valD:"~$250M", valC:"med", oss:false,
+ note:"Commercial arm of the FutureHouse nonprofit lineage. Seed co-led by Spark Capital and Triatomic at a ~$250M valuation (2025-12); around 30 staff.",
+ sources:[["Bloomberg · 2025-12","https://www.bloomberg.com/news/articles/2025-12-18/ai-startup-edison-raises-70-million-to-speed-up-scientific-research"],["We raised $70M · edisonscientific.com","https://edisonscientific.com/articles/we-raised-70m-to-accelerate-science"],["SEC Form D \u00b7 2025-12","https://www.sec.gov/Archives/edgar/data/2100117/000210011725000001/xslFormDX08/primary_doc.xml"],["LinkedIn company page","https://www.linkedin.com/company/edison-scientific"]]},
+
+{rank:7, name:"Inherent", country:"UK", stage:"Seed", refs:{"stage":[2],"raised":[2],"head":[3],"founded":[2],"hq":[2]}, head:"2\u201310", headC:"med", url:"https://techcrunch.com/2026/08/22/inherent-founded-by-deepmind-alumni-says-its-ai-teammate-just-outperformed-anthropic-and-openai-at-replicating-research/", seg:"pure", dom:["AI Research"], lvl:2, target:3,
+ loop:"Faraday, an AI research \"teammate\", autonomously replicates published ML and AI-for-science papers \u2014 on Inherent's Replica benchmark (310 tasks from 100 papers) it outscores Claude Opus 4.8 and GPT-5.5 at reproducing results without prior answers.",
+ flagship:"Faraday \u00b7 Replica benchmark", people:"Tantum Collins, Edward Hughes, Louis Kirsch (ex-DeepMind), Kaloyan Aleksiev", founded:2025, hq:"London, UK",
+ raised:50, raisedD:"$50M", raisedC:"hi", val:0, valD:"\u2013", valC:"lo", oss:false,
+ note:"Emerged from stealth 2026-05; seed led by Index with Radical and NVentures, Matt Clifford advising. Benchmark results are self-reported \u2014 no independent verification yet.",
+ sources:[["TechCrunch \u00b7 2026-08","https://techcrunch.com/2026/08/22/inherent-founded-by-deepmind-alumni-says-its-ai-teammate-just-outperformed-anthropic-and-openai-at-replicating-research/"],["Sifted \u00b7 2026-05","https://sifted.eu/articles/inherent-ai-funding-round-index-matt-clifford"],["LinkedIn company page","https://www.linkedin.com/company/inherent-laboratories"]]},
+
+{rank:8, name:"Adaption", country:"USA", stage:"Seed", refs:{"stage":[1],"raised":[1,2]}, head:"11–50", headC:"lo", url:"https://mozilla.vc/adaption-aims-big-with-autoscientist/", seg:"pure", dom:["AI Research"], lvl:1, target:3,
+ loop:"AutoScientist automates fine-tuning and training decisions — its configurations beat those chosen by Adaption's own researchers (48% → 64% win rate on internal evals).",
+ flagship:"AutoScientist", people:"Sara Hooker (ex-Cohere Labs)", founded:2025, hq:"San Francisco, USA",
+ raised:50, raisedD:"$50M", raisedC:"hi", val:0, valD:"–", valC:"lo", oss:false,
+ note:"Seed 2026-02 (Emergence, Mozilla Ventures, Fifty Years); thesis: smarter training beats bigger models.",
+ sources:[["Mozilla Ventures · 2026","https://mozilla.vc/adaption-aims-big-with-autoscientist/"],["implicator.ai · 2026","https://www.implicator.ai/sara-hooker-bets-50m-that-smarter-training-beats-bigger-models-2/"]]},
+
+{rank:9, name:"Ricursive Intelligence", country:"USA", stage:"Series A", refs:{"stage":[1],"raised":[1],"val":[1],"founded":[2]}, head:"11\u201350", headC:"lo", url:"https://www.prnewswire.com/news-releases/ricursive-intelligence-raises-300-million-series-a-at-4-billion-valuation-to-accelerate-ai-driven-semiconductor-design-302670061.html", seg:"pure", dom:["Hardware","AI Research"], lvl:0, target:3,
+ loop:"The loop reaches silicon: an AI system that designs and automatically improves AI chips \u2014 better chips train better models, which design better chips. Founders' AlphaChip method already shipped in four generations of Google TPUs.",
+ flagship:"AI chip-design platform (early)", people:"Anna Goldie (CEO), Azalia Mirhoseini (CTO) \u2014 AlphaChip creators, ex-Google Brain/Anthropic", founded:2025, hq:"USA",
+ raised:335, raisedD:"$335M", raisedC:"hi", val:4, valD:"$4B", valC:"hi", oss:false,
+ note:"$300M Series A led by Lightspeed at $4B \u2014 two months after a Sequoia-led seed. DST, Felicis, Radical, and Nvidia's NVentures participating.",
+ sources:[["Series A release \u00b7 2026-01","https://www.prnewswire.com/news-releases/ricursive-intelligence-raises-300-million-series-a-at-4-billion-valuation-to-accelerate-ai-driven-semiconductor-design-302670061.html"],["TFN \u00b7 2026-01","https://techfundingnews.com/ricursive-intelligence-300m-series-a-4b-valuation-google-alphachip-founders/"]]},
+
+{rank:11, name:"Mirendil", country:"USA", stage:"Seed", refs:{"stage":[1],"raised":[1,2],"val":[1],"head":[1],"founded":[3]}, head:"11–50", headC:"med", url:"https://www.unite.ai/former-anthropic-researchers-launch-mirendil-at-1-billion-valuation-with-200-m-seed-round/", seg:"pure", dom:["AI Research"], lvl:0, target:4,
+ loop:"Automating parts of the AI research loop and packaging it as tools \u2014 so universities and organizations outside the big labs can train and improve their own frontier-grade models.",
+ flagship:"Self-improving research platform (early)", people:"Behnam Neyshabur, Harsh Mehta (ex-Anthropic; ex-Google) + ~20 researchers from Anthropic/xAI/DeepMind/OpenAI", founded:2025, hq:"USA",
+ raised:200, raisedD:"$200M", raisedC:"hi", val:1, valD:"$1B", valC:"hi", oss:false,
+ note:"Seed from a16z, Kleiner Perkins and Nvidia weeks after the founders left Anthropic; $100M+ multi-year Google Cloud TPU/GPU deal to train self-improving systems.",
+ sources:[["TFN \u00b7 2026","https://techfundingnews.com/ex-anthropic-researchers-raise-200m-just-weeks-after-quitting-to-build-ai-that-creates-better-ai/"],["Unite.AI","https://www.unite.ai/former-anthropic-researchers-launch-mirendil-at-1-billion-valuation-with-200-m-seed-round/"],["BuiltIn profile","https://builtin.com/company/mirendil"]]},
+
+{rank:12, name:"Discovery Loop", country:"USA", stage:"Seed", refs:{"stage":[1],"founded":[1],"head":[3]}, head:"1\u201310", headC:"med", url:"https://techcrunch.com/2026/08/05/jeff-dean-and-other-top-ai-researchers-are-leaving-google-to-launch-their-own-startup/", seg:"pure", dom:["AI Research","Science"], lvl:0, target:4,
+ loop:"Automating the scientific method at scale: thousands of parallel experiments where the AI proposes the experiment, runs it, learns from the result, and iterates \u2014 with recursive self-improvement an explicit research goal. Pre-product.",
+ flagship:"Autonomous experimentation platform (unreleased)", people:"Jeff Dean (CEO), Sanjay Ghemawat, Quoc Le, Oriol Vinyals \u2014 all ex-Google/DeepMind", founded:2026, hq:"USA",
+ raised:0, raisedD:"undisclosed", raisedC:"med", val:0, valD:"\u2013", valC:"lo", oss:false,
+ note:"Public benefit corporation (2026-08). Seed co-led by Radical Ventures and Khosla Ventures with Kleiner Perkins, Lightspeed, Doerr Capital \u2014 and Alphabet itself investing. Arguably the most senior founding team yet assembled around this thesis.",
+ sources:[["TechCrunch \u00b7 2026-08-05","https://techcrunch.com/2026/08/05/jeff-dean-and-other-top-ai-researchers-are-leaving-google-to-launch-their-own-startup/"],["Radical Ventures","https://radical.vc/our-investment-in-discovery-loop/"],["LinkedIn company page","https://www.linkedin.com/company/discoveryloop"]]},
+
+{rank:13, name:"Poetiq", country:"USA", stage:"Seed", refs:{"stage":[1],"raised":[1],"founded":[1]}, head:"1–10", headC:"med", url:"https://poetiq.ai/", seg:"pure", dom:["AI Research"], lvl:1, target:3,
+ loop:"A meta-system that builds self-improving reasoning agents on top of any underlying LLM \u2014 the scaffold optimizes itself rather than waiting for a better base model.",
+ flagship:"Poetiq meta-system", people:"Shumeet Baluja, Ian Fischer (ex-Google/DeepMind)", founded:2025, hq:"USA",
+ raised:45.8, raisedD:"$45.8M", raisedC:"hi", val:0, valD:"\u2013", valC:"lo", oss:false,
+ note:"Topped the ARC-AGI-2 leaderboard within six months of launch. Seed co-led by FYRFLY and Surface Ventures with Y Combinator and 468 Capital.",
+ sources:[["Seed announcement","https://poetiq.ai/posts/seed_funding/"],["Ventureburn","https://ventureburn.com/poetiq-raises-45-8m-ai-meta-system-beats-top-llms/"]]},
+
+{rank:10, name:"Core Automation", country:"USA", stage:"Seed", refs:{"stage":[2],"raised":[2,3],"val":[3],"head":[1],"founded":[1]}, head:"11–50", headC:"med", url:"https://finance.biggo.com/news/ryuKvZ0Bq7sy_YQMH2sp", seg:"pure", dom:["AI Research","Continual Learning"], lvl:0, target:4,
+ loop:"\"The world's most automated AI lab\": systems that optimize and automate themselves starting from the research itself — new learning algorithms beyond large-scale pretraining. Ceres targets ~1% of SOTA training data with real-time weight updates in production. Pre-product.",
+ flagship:"Ceres (continual-learning model, unreleased)", people:"Jerry Tworek (ex-OpenAI VP Research, o1/o3); hires incl. Rohan Anil (ex-Anthropic), Anmol Gulati (ex-DeepMind), Joanne Jang (ex-OpenAI)", founded:2026, hq:"USA",
+ raised:532, raisedD:"~$532M", raisedC:"hi", val:3.62, valD:"$3.62B", valC:"med", oss:false,
+ note:"Form D (2026-07) records $432M sold \u2014 including $135M of converted SAFEs \u2014 after a $100M round at a $1B valuation; the once-reported-as-in-talks raise has closed. Reports still conflict on the founding date (early 2025 vs 2026).",
+ sources:[["BigGo Finance \u00b7 2026-04","https://finance.biggo.com/news/ryuKvZ0Bq7sy_YQMH2sp"],["SEC Form D \u00b7 2026-07","https://app.edgar.tools/filing/2148145/0002148145-26-000001/formd"],["Forge financing history","https://forgeglobal.com/core-automation_ipo/"]]},
+
+{rank:null, radar:true, name:"Frontis AI", country:"China", stage:"Angel", head:"51–200", headC:"lo", url:"https://arxiv.org/abs/2607.28568", seg:"pure", dom:["AI Research"], lvl:2, target:4,
+ loop:"Frontis-MA1 trains an \"AI4AI\" model that automates machine-learning engineering \u2014 diagnose, redesign, retrain \u2014 alongside OpenMLE, an open full-stack system for RSI research. One of the few companies publishing RSI work from China.",
+ flagship:"Frontis-MA1 \u00b7 OpenMLE", people:"Bowen Zhou (ex-JD AI research head, Tsinghua), Kaiyan Zhang (CTO)", founded:2021, hq:"Beijing, China",
+ raised:30, raisedD:"tens of $M", raisedC:"med", val:0, valD:"\u2013", valC:"lo", oss:true,
+ note:"Angel round led by Qiming with Matrix (reported 2022 \u2014 dated; later rounds unverified). The MA1 paper (2026-07) puts recursive self-improvement in its title.",
+ sources:[["Frontis-MA1 \u00b7 arXiv 2026-07","https://arxiv.org/abs/2607.28568"],["Yicai \u00b7 angel round","https://www.yicaiglobal.com/news/chinese-ai-startup-frontis-bags-tens-of-millions-of-us-dollars-in-angel-round-led-by-qiming"]]},
+
+{rank:14, name:"Latent Labs", country:"UK", stage:"Series A", refs:{"hq":[1]}, head:"11–50", headC:"lo", url:"https://www.latentlabs.com", seg:"pure", dom:["Science"], lvl:1, target:3,
+ loop:"Generative protein-design models wired to a wet-lab validation loop \u2014 designs are synthesized and tested, and the results train the next model generation (LatentX).",
+ flagship:"LatentX", people:"Simon Kohl (ex-DeepMind, AlphaFold team)", founded:2023, hq:"London, UK + San Francisco",
+ raised:50, raisedD:"$50M", raisedC:"med", val:0, valD:"\u2013", valC:"lo", oss:false,
+ note:"Launched 2025 with $50M led by Radical Ventures and Sofinnova; angels include Jeff Dean and Aidan Gomez.",
+ sources:[["latentlabs.com","https://www.latentlabs.com"],["Neolab tracker","https://neolabs.fyi/"]]},
+
+{rank:15, name:"Ndea", country:"USA", stage:"Seed", refs:{"raised":[2],"stage":[5],"val":[3],"founded":[4]}, head:"11–50", headC:"lo", url:"https://ndea.com", seg:"pure", dom:["AI Research","Continual Learning"], lvl:0, target:3,
+ loop:"Program synthesis fused with deep learning — systems that acquire new skills from few examples and \"keep improving on their own with no bottlenecks in sight\".",
+ flagship:"Guided program synthesis (research phase)", people:"François Chollet (Keras, ARC-AGI), Mike Knoop (Zapier)", founded:2024, hq:"San Francisco, USA (distributed)",
+ raised:43, raisedD:"$43M", raisedC:"med", val:0.45, valD:"$450M", valC:"med", oss:false,
+ note:"Deliberately contrarian to the scaling thesis; closely tied to the ARC Prize ecosystem.",
+ sources:[["VentureBeat","https://venturebeat.com/ai/forget-nvidia-ndea-wants-to-build-ai-that-keeps-improving-on-its-own-with-no-bottlenecks-in-sight"],["Extruct funding note","https://www.extruct.ai/hub/ndea-com/"],["The Information","https://www.theinformation.com/newsletters/ai-agenda/is-deepseek-an-extinction-event-a-new-reasoning-focused-ai-lab-lands-funding"],["YC profile","https://www.ycombinator.com/companies/ndea-com"],["Dealroom profile","https://app.dealroom.co/companies/ndea"]]},
+
+{rank:null, radar:true, name:"Autoscience", country:"USA", stage:"Seed", head:"11–50", headC:"lo", url:"https://autoscience.ai", seg:"pure", dom:["AI Research"], lvl:2, target:3,
+ loop:"Carl autonomously conducts ML research end to end; its papers have passed workshop peer review, and the lab is scaling automated R&D of new models.",
+ flagship:"Carl (autonomous AI researcher)", people:"—", founded:2024, hq:"San Mateo, CA, USA",
+ raised:14, raisedD:"$14M", raisedC:"med", val:0, valD:"–", valC:"lo", oss:false,
+ note:"Applied research lab; new funding 2026-03 to scale the autonomous lab.",
+ sources:[["AIwire · 2026-03","https://www.hpcwire.com/aiwire/2026/03/25/autoscience-secures-new-funding-to-scale-its-autonomous-ai-research-lab/"],["autoscience.ai","https://autoscience.ai/"]]},
+
+{rank:null, radar:true, name:"Apodex", country:"", stage:"Self-funded", refs:{"hq":[3],"head":[4]}, head:"51\u2013200", headC:"med", url:"https://apodex.ai", seg:"pure", dom:["Science"], lvl:2, target:3,
+ loop:"A Self-Evolving Solver for open-world problems with no answer in any dataset: up to 150 coordinated sub-agents over 15,000 steps, where every reasoning step is auditable and every improvement must be earned through verified discovery.",
+ flagship:"Self-Evolving Solver \u00b7 Frontier Program", people:"Tianqiao Chen (founder/funder), Lidong Bing (COO, ex-Alibaba DAMO), Sheng Wang (UW)", founded:2025, hq:"Redwood City, CA, USA",
+ raised:0, raisedD:"self-funded", raisedC:"med", val:0, valD:"\u2013", valC:"lo", oss:false,
+ note:"Funded personally by Shanda founder Tianqiao Chen; the team says the first fully closed self-evolution loop may land within six months. Frontier Program grants researchers $100K/month in compute credits.",
+ sources:[["Frontier Program \u00b7 2026-07","https://www.prnewswire.com/news-releases/apodex-launches-frontier-program-offering-100-000-in-monthly-ai-credits-to-scientific-researchers-deep-tech-startups-academic-labs-302831015.html"],["BigGo interview","https://finance.biggo.com/news/02b07e3d2fbf3fab"],["Apodex user agreement (address)","https://www.apodex.com/policies/pilot-institutional-user-agreement"],["LinkedIn company page","https://www.linkedin.com/company/apodex"]]},
+
+{rank:null, radar:true, name:"Weco AI", country:"USA", stage:"Seed", refs:{"raised":[1],"founded":[2],"hq":[3],"head":[3]}, head:"1–10", headC:"med", url:"https://www.weco.ai", seg:"pure", dom:["AI Research"], lvl:2, target:3,
+ loop:"AIDE iteratively rewrites ML code — models, GPU kernels, prompts — against any metric the user names, and keeps what improves; tops OpenAI's MLE-Bench for automated ML engineering.",
+ flagship:"AIDE (self-evolving software agent)", people:"Zhengyao Jiang, Dominik Schmidt, Yuxiang Wu (AIDE authors)", founded:2023, hq:"London, UK",
+ raised:8, raisedD:"$8M+", raisedC:"hi", val:0, valD:"–", valC:"lo", oss:true,
+ note:"Seed led by Golden Ventures. AIDE is open-source and was used by OpenAI as the MLE-bench reference agent — small company, outsized evidence.",
+ sources:[["Seed announcement","https://www.weco.ai/blog/seed-announcement"],["Companies House","https://find-and-update.company-information.service.gov.uk/company/14894509"],["LinkedIn company page","https://uk.linkedin.com/company/weco-ai"]]},
+
+{rank:null, radar:true, name:"Deep Cogito", country:"USA", stage:"Series A", refs:{"stage":[2],"raised":[1,2]}, head:"1–10", headC:"lo", url:"https://deepcogito.com", seg:"pure", dom:["AI Research"], lvl:1, target:4,
+ loop:"Iterated distillation & amplification: models internalize their own improved reasoning at each generation — shipped as the open Cogito v1/v2 model families.",
+ flagship:"Cogito v2 (open models)", people:"Drishan Arora, Dhruv Malhotra (ex-Google/DeepMind)", founded:2024, hq:"San Francisco, USA",
+ raised:53, raisedD:"$53M", raisedC:"med", val:0, valD:"–", valC:"lo", oss:true,
+ note:"Benchmark-led seed; one of the few startups shipping self-improvement as open weights.",
+ sources:[["FinSMEs · 2025-08","https://www.finsmes.com/2025/08/deep-cogito-raises-13m-in-seed-funding.html"],["SEC Form D \u00b7 2026-04","https://www.sec.gov/Archives/edgar/data/2128259/000212825926000002/xslFormDX01/primary_doc.xml"]]},
+
+{rank:null, radar:true, name:"Intology", country:"USA", stage:"Seed", refs:{"stage":[3],"raised":[3],"founded":[4],"head":[4]}, head:"1–10", headC:"lo", url:"https://www.intology.ai", seg:"pure", dom:["AI Research"], lvl:2, target:3,
+ loop:"Zochi, an \"artificial scientist\", runs the full research cycle on hard AI problems — the first AI system with a peer-reviewed main-conference paper (ACL 2025).",
+ flagship:"Zochi", people:"—", founded:2025, hq:"San Francisco, USA",
+ raised:8, raisedD:"$8M", raisedC:"med", val:0, valD:"–", valC:"lo", oss:true,
+ note:"Funding undisclosed; publication record is the signal here.",
+ sources:[["Zochi technical report","https://www.intology.ai/blog/zochi-tech-report"],["Zochi on GitHub","https://github.com/IntologyAI/Zochi"],["Dealroom profile","https://app.dealroom.co/companies/intology"],["LinkedIn company page","https://www.linkedin.com/company/intologyai"]]},
+
+{rank:null, radar:true, name:"Disarray", country:"USA", stage:"–", refs:{"founded":[2]}, head:"1–10", headC:"lo", url:"https://techcrunch.com/2026/05/28/rsi-is-the-new-agi-and-its-just-as-hard-to-pin-down/", seg:"pure", dom:["AI Research"], lvl:2, target:3,
+ loop:"Self-trained ML agents: Disarray's system took 28 medals in Kaggle competition against human-built pipelines, with a focus on making self-training reliable.",
+ flagship:"Self-trained ML agents", people:"Doris Xin", founded:2021, hq:"USA",
+ raised:0, raisedD:"–", raisedC:"lo", val:0, valD:"–", valC:"lo", oss:false,
+ note:"Early; funding undisclosed. LinkedIn dates the company to 2021 \u2014 the evidence suggests it grew out of Doris Xin\u2019s earlier startup Linea. Named in TechCrunch\u2019s RSI landscape coverage (2026-05).",
+ sources:[["TechCrunch · 2026-05","https://techcrunch.com/2026/05/28/rsi-is-the-new-agi-and-its-just-as-hard-to-pin-down/"],["LinkedIn company page","https://www.linkedin.com/company/disarray-labs"]]},
+
+{rank:null, radar:true, name:"Asari AI", country:"USA", stage:"Seed", refs:{"head":[3],"hq":[4]}, head:"1\u201310", headC:"med", url:"https://asari.ai/", seg:"pure", dom:["Continual Learning"], lvl:0, target:3,
+ loop:"Agent software that learns, reasons, plans, and verifies its own outputs \u2014 aimed at human\u2013AI \"co-invention\" of new science and engineering. Early; no public self-improvement results yet.",
+ flagship:"Co-invention agents (early)", people:"Stephan Zheng (ex-Salesforce Research); Yisong Yue advising", founded:2023, hq:"San Francisco, CA, USA",
+ raised:14, raisedD:"$14M", raisedC:"med", val:0, valD:"\u2013", valC:"lo", oss:false,
+ note:"Initial round led by Eric Schmidt \u2014 with Jeff Dean and Caltech investing. The $14M figure comes from deal databases; the official announcement does not state an amount.",
+ sources:[["Wilson Sonsini \u00b7 2024-03","https://www.wsgr.com/en/insights/wilson-sonsini-advises-asari-ai-on-initial-funding-round.html"],["asari.ai","https://asari.ai/"],["LinkedIn company page","https://www.linkedin.com/company/asari-ai"],["asari.ai terms (address)","https://asari.ai/terms"]]},
+
+{rank:null, radar:true, name:"Tetsuwan Scientific", country:"USA", stage:"Pre-seed", head:"1–10", headC:"med", url:"https://www.tetsuwan.com", seg:"pure", dom:["Science"], lvl:1, target:2,
+ loop:"Robotic AI scientists — glass-cube robots that interpret a scientific goal, run the wet-lab experiment, and read the results back into the next iteration.",
+ flagship:"Autonomous robotic scientist", people:"Cristian Ponce, Théo Schäfer", founded:2023, hq:"San Francisco, USA",
+ raised:2.7, raisedD:"$2.7M", raisedC:"med", val:0, valD:"–", valC:"lo", oss:false,
+ note:"Pre-seed led by 2048 Ventures; deployed with RNA-therapeutics lab La Jolla Labs. ~7 people from Caltech, ETH, MIT.",
+ sources:[["SynBioBeta · 2025","https://www.synbiobeta.com/read/first-autonomous-robotic-scientist-launched-as-tetsuwan-scientific-secures-2-7m"]]},
+
+{rank:null, radar:true, name:"Potato", country:"USA", stage:"Seed", refs:{"raised":[3]}, head:"1–10", headC:"lo", url:"https://www.potato.ai", seg:"pure", dom:["Science"], lvl:1, target:2,
+ loop:"Autonomous science agents that generate hypotheses, optimize protocols, and execute computational and wet-lab experiments — compounding lab knowledge run over run.",
+ flagship:"Potato science agents", people:"Nick Edwards (neuroscientist), Ryan Kosai", founded:2023, hq:"Seattle, WA, USA",
+ raised:5.5, raisedD:"$5.5M", raisedC:"med", val:0, valD:"–", valC:"lo", oss:false,
+ note:"Seed led by Draper Associates (2025-04); reportedly in use at Stanford, Harvard, MIT, and Scripps labs.",
+ sources:[["Seed press release","https://www.potato.ai/press/series-seed/"],["GeekWire · 2025","https://www.geekwire.com/2025/startup-aiming-to-revolutionize-research-with-fully-automated-science-experimentation-lands-4-5m/"],["Caplight profile","https://www.caplight.com/company/potato"]]},
+
+{rank:null, radar:true, name:"EverMind", country:"China", stage:"Incubated", head:"11–50", headC:"lo", url:"https://www.qbitai.com/2026/08/468555.html", seg:"pure", dom:["AI Research","Continual Learning"], lvl:1, target:4,
+ loop:"\"Full-stack self-evolution\" in a three-paper trilogy: DASH (models recognize their own errors during training), Self-Evolving Harness (agents safely rewrite their own logic at runtime), and SkillCorpus (successful experience banked and reused at scale).",
+ flagship:"DASH \u00b7 Self-Evolving Harness \u00b7 SkillCorpus", people:"Yafeng Deng (ex-Baidu/Gelingshentong/360); incubated by Tianqiao Chen's Shanda", founded:2025, hq:"China",
+ raised:0, raisedD:"Shanda-backed", raisedC:"med", val:0, valD:"\u2013", valC:"lo", oss:false,
+ note:"QbitAI called the August 2026 trilogy China's \"NeoLab moment\" \u2014 the second Tianqiao Chen self-evolution bet alongside Apodex. Papers are self-published; independent replication pending. Some registries list a San Mateo, CA incorporation.",
+ sources:[["QbitAI \u00b7 2026-08","https://www.qbitai.com/2026/08/468555.html"],["China.com \u00b7 2026-08","https://tech.china.com/articles/20260809/202608091936594.html"]]},
+
+{rank:null, radar:true, name:"Elicit", country:"USA", stage:"Series A", refs:{"stage":[2],"raised":[2],"hq":[1],"val":[3]}, head:"11\u201350", headC:"med", url:"https://elicit.com/", seg:"pure", dom:["Science"], lvl:2, target:3,
+ loop:"Automates the evidence-synthesis half of research end to end \u2014 search, screening, extraction and synthesis across the literature \u2014 with PRISMA-compliant systematic reviews that stay reproducible and auditable at every step.",
+ flagship:"Elicit \u00b7 Systematic Review", people:"Andreas Stuhlm\u00fcller (CEO), Jungwon Byun (COO) \u2014 spun out of the nonprofit Ought", founded:2023, hq:"Oakland, CA, USA",
+ raised:31, raisedD:"$31M", raisedC:"med", val:0.1, valD:"$100M", valC:"hi", oss:false,
+ note:"Public benefit corporation; $22M Series A (early 2025) co-led by Spark Capital and Footwork, with Jeff Dean angel-investing. Reports 95\u201399% accuracy across 994 Cochrane reviews, while an independent 2025 Cochrane study measured 37.9% sensitivity under real systematic-review search strategies \u2014 one of the few entries here evaluated by a third party at all.",
+ sources:[["elicit.com","https://elicit.com/"],["Independent review \u00b7 2026","https://fast.io/resources/elicit-ai-review-2026/"],["Series A announcement","https://elicit.com/blog/series-a"]]},
+
+{rank:null, radar:true, name:"Novix", country:"USA", stage:"–", head:"11\u201350", headC:"lo", url:"https://novix.science/", seg:"pure", dom:["Science"], lvl:2, target:3,
+ loop:"An agentic co-scientist running the full research cycle \u2014 deep research, ideation, coding, data analysis, automated experimentation, and paper writing \u2014 live as a free-to-try product.",
+ flagship:"Novix co-scientist", people:"Chad Shi (ex-Microsoft), Jiabin Tang (PhD, HKU; ex-Kimi, ex-Baidu)", founded:2025, hq:"Sunnyvale, CA, USA",
+ raised:0, raisedD:"\u2013", raisedC:"lo", val:0, valD:"\u2013", valC:"lo", oss:false,
+ note:"VC-backed (Llama Ventures), amount undisclosed. Academic lineage in Hong Kong (co-founder is an HKU PhD, ex-Kimi and ex-Baidu); results are self-reported \u2014 no independent evaluation yet.",
+ sources:[["novix.science","https://novix.science/"],["Chad Shi \u00b7 X","https://x.com/chadshi_1"],["Jiabin Tang \u00b7 X","https://x.com/tangjiabin7"],["Launch \u00b7 X 2025","https://x.com/huang_chao4969/status/1961120989015937287"]]},
+
+{rank:null, radar:true, name:"Cursive", country:"UK", stage:"Seed", refs:{"stage":[3],"founded":[4],"head":[5]}, head:"11\u201350", headC:"med", url:"https://cursive.ai/", seg:"pure", dom:["Continual Learning"], lvl:0, target:3,
+ loop:"Foundation models for behavioural prediction and long-horizon reasoning \u2014 built so agents become more effective the longer they are deployed, improving continuously from use.",
+ flagship:"Adaptive foundation models (early)", people:"Olivier H\u00e9naff, Talfan Evans (ex-DeepMind senior researchers)", founded:2024, hq:"London, UK",
+ raised:0, raisedD:"\u2013", raisedC:"lo", val:0, valD:"\u2013", valC:"lo", oss:false,
+ note:"Backed by DCVC, EQT, Samsung Next, AWS Startups and Nvidia's NVentures; among the first seven startups supported by the UK's Sovereign AI fund. Amount undisclosed.",
+ sources:[["cursive.ai","https://cursive.ai/"],["UK Sovereign AI first batch \u00b7 TFN","https://techfundingnews.com/uks-sovereign-ai-fund-names-7-startups-its-supporting-in-its-first-batch-here-are-the-details/"],["SuperSeed Q1 2026 results (RNS)","https://www.investegate.co.uk/announcement/rns/superseed-capital-limited--www/q1-2026-results-/9576525"],["Companies House (inc. 2024-11)","https://find-and-update.company-information.service.gov.uk/company/16099785"],["LinkedIn company page","https://uk.linkedin.com/company/cursive-ai"]]},
+
+{rank:null, radar:true, name:"Physical Superintelligence", country:"USA", stage:"–", refs:{"hq":[3],"head":[4]}, head:"11\u201350", headC:"med", url:"https://www.psi.inc/", seg:"pure", dom:["Science"], lvl:2, target:3,
+ loop:"Get Physics Done: an open-source agentic physicist that scopes a problem, plans the research, carries out derivations and numerical checks, and verifies its own results against physical constraints \u2014 step one of a \"vertically integrated factory\" for physics discovery.",
+ flagship:"Get Physics Done (OSS)", people:"Alex Wissner-Gross, Matthew Pines", founded:2025, hq:"Cambridge, MA + San Francisco, USA",
+ raised:0, raisedD:"\u2013", raisedC:"lo", val:0, valD:"\u2013", valC:"lo", oss:true,
+ note:"Public benefit corporation; backers include SV Angel, Valkyrie, Balaji Srinivasan, and angels from OpenAI, Nvidia, DeepMind. Amount undisclosed.",
+ sources:[["psi.inc","https://www.psi.inc/"],["GPD launch \u00b7 X","https://x.com/matthew_pines/status/2033228329692651787"],["USPTO filing (address)","https://uspto.report/TM/99753687"],["LinkedIn company page","https://www.linkedin.com/company/physical-superintelligence"]]},
+
+{rank:null, radar:true, name:"MiroMind", country:"Singapore", stage:"Incubated", refs:{"raised":[3],"head":[4],"founded":[5]}, head:"51\u2013200", headC:"med", url:"https://research.miromind.ai/", seg:"pure", dom:["AI Research"], lvl:1, target:3,
+ loop:"Open-source research and prediction agents \u2014 MiroThinker (deep-research agent, 80%+ on GAIA) and MiroFlow \u2014 plus a dedicated Verifiable AI lab, aimed at \"discoverable intelligence\".",
+ flagship:"MiroThinker \u00b7 MiroFlow", people:"Backed by Tianqiao Chen (Shanda); leads incl. Simon Shaolei Du, Bo An (NTU), Kaiyu Yang; ~26 staff", founded:2025, hq:"Singapore + Redwood City, USA",
+ raised:100, raisedD:"$100M (Shanda)", raisedC:"med", val:0, valD:"\u2013", valC:"lo", oss:true,
+ note:"Shanda's AI lab, consolidating research into Singapore per SCMP \u2014 the third Tianqiao Chen self-improvement bet alongside Apodex and EverMind.",
+ sources:[["SCMP \u00b7 2026","https://www.scmp.com/tech/tech-trends/article/3340721/china-founded-shandas-ai-lab-boosts-singapore-operation-pulling-research-china"],["research.miromind.ai","https://research.miromind.ai/"],["Straits Times","https://www.straitstimes.com/business/companies-markets/chinese-billionaire-overhauls-ai-start-up-which-has-scientists-in-singapore-after-warning-on-manus/"],["LinkedIn company page","https://www.linkedin.com/company/miromind-ai"],["SG registry (2025-10)","https://www.sgpbusiness.com/company/Miromind"]]},
+
+// ---------------- FRONTIER LABS (n/r) ----------------
+{rank:null, name:"Google DeepMind", country:"UK", stage:"Corporate", head:"1000+", headC:"med", url:"https://deepmind.google/discover/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/", seg:"lab", dom:["AI Research"], lvl:3, target:4,
+ loop:"AlphaEvolve evolves algorithms that are deployed into the very infrastructure that trains Gemini — kernels, schedulers, chip design — making the next AlphaEvolve stronger.",
+ flagship:"AlphaEvolve · AI co-scientist", people:"Demis Hassabis", founded:2010, hq:"London, UK",
+ raised:0, raisedD:"corp", raisedC:"hi", val:0, valD:"–", valC:"lo", oss:false,
+ note:"The clearest publicly documented L3 loop in production: 23% FlashAttention speedup, recovered datacenter capacity, matrix-multiplication records.",
+ sources:[["IEEE Spectrum","https://spectrum.ieee.org/recursive-self-improvement"]]},
+
+{rank:null, name:"OpenAI", country:"USA", stage:"Corporate", refs:{"val":[3],"raised":[3]}, head:"1000+", headC:"med", url:"https://www.technologyreview.com/2026/03/20/1134438/openai-is-throwing-everything-into-building-a-fully-automated-researcher/", seg:"lab", dom:["AI Research"], lvl:2, target:4,
+ loop:"Reorganized around automating its own research: target of an automated research intern by 2026-09 and a fully automated AI researcher by 2028-03.",
+ flagship:"Automated researcher program", people:"Sam Altman, Jakub Pachocki", founded:2015, hq:"San Francisco, USA",
+ raised:184000, raisedD:"$184B", raisedC:"med", val:852, valD:"$852B", valC:"hi", oss:false,
+ note:"Agents write code, generate training data, run evals, and red-team models internally \u2014 and a dedicated \"RSI Preparedness\" lead owns safety for exactly this capability. $852B post-money with ~$184B in committed funding, per its own 2026 disclosure.",
+ sources:[["MIT Tech Review · 2026-03","https://www.technologyreview.com/2026/03/20/1134438/openai-is-throwing-everything-into-building-a-fully-automated-researcher/"],["The Decoder","https://the-decoder.com/openai-targets-full-scale-autonomous-ai-researcher-by-early-2028/"],["OpenAI \u00b7 next phase post","https://openai.com/index/accelerating-the-next-phase-ai/"]]},
+
+{rank:null, name:"Anthropic", country:"USA", stage:"Series H", refs:{"stage":[2],"val":[2],"raised":[3]}, head:"1000+", headC:"med", url:"https://time.com/article/2026/08/07/ai-recursive-self-improvement-anthropic-openai/", seg:"lab", dom:["AI Research"], lvl:2, target:4,
+ loop:"Claude increasingly builds Claude — Claude Code reportedly writes the large majority of some teams' code — with AI-R&D autonomy thresholds written into its Responsible Scaling Policy.",
+ flagship:"Claude Code · internal auto-research", people:"Dario Amodei", founded:2021, hq:"San Francisco, USA",
+ raised:162000, raisedD:"$162B", raisedC:"med", val:965, valD:"$965B", valC:"hi", oss:false,
+ note:"Distinctive for pairing the capability push with published safety gates on exactly this capability. Series H (2026-05) at a $965B post-money valuation.",
+ sources:[["TIME · 2026-08","https://time.com/article/2026/08/07/ai-recursive-self-improvement-anthropic-openai/"],["Series H announcement","https://www.anthropic.com/news/series-h"],["CB Insights","https://www.cbinsights.com/company/anthropic"]]},
+
+// ---------------- INFRASTRUCTURE (n/r) ----------------
+{rank:null, name:"Letta", country:"USA", stage:"Seed", head:"11–50", headC:"lo", url:"https://letta.com", seg:"infra", dom:["Continual Learning"], lvl:1, target:2,
+ loop:"Stateful agents (from the MemGPT research) that edit their own memory and improve with use — including \"sleep-time compute\" for offline self-refinement.",
+ flagship:"Letta platform / MemGPT", people:"Charles Packer, Sarah Wooders (UC Berkeley)", founded:2024, hq:"San Francisco, USA",
+ raised:10, raisedD:"$10M", raisedC:"med", val:0.07, valD:"$70M", valC:"med", oss:true,
+ note:"Felicis-led seed; Jeff Dean among angels.",
+ sources:[["letta.com","https://letta.com"]]},
+
+{rank:null, name:"OpenPipe", country:"USA", stage:"Acquired", refs:{"head":[2]}, head:"1\u201310", headC:"med", url:"https://openpipe.ai", seg:"infra", dom:["Enterprise"], lvl:1, target:2, acq:true,
+ loop:"RL from production feedback: RULER and ART let deployed agents improve from their own trajectories without hand-labeled rewards.",
+ flagship:"ART · RULER", people:"Kyle Corbitt", founded:2023, hq:"Seattle, USA",
+ raised:6.7, raisedD:"$6.7M", raisedC:"med", val:0, valD:"acq", valC:"med", oss:true,
+ note:"Acquired by CoreWeave (2025-09) — early proof the category exits.",
+ sources:[["openpipe.ai","https://openpipe.ai"],["Dealroom profile","https://app.dealroom.co/companies/openpipe"]]},
+
+{rank:null, radar:true, name:"Zenbase", country:"USA", stage:"Seed", refs:{"stage":[2],"raised":[2]}, head:"1–10", headC:"lo", url:"https://zenbase.ai", seg:"infra", dom:["Enterprise"], lvl:1, target:2,
+ loop:"Continuous prompt and model-selection optimization — the DSPy optimize-your-own-pipeline loop, productized by DSPy core contributors.",
+ flagship:"Zenbase (DSPy commercialization)", people:"DSPy core contributors (Cyrus Nouroozi)", founded:2024, hq:"USA",
+ raised:0.5, raisedD:"$0.5M+", raisedC:"med", val:0, valD:"–", valC:"lo", oss:true,
+ note:"YC-backed; grew out of the open-source DSPy project.",
+ sources:[["zenbase.ai","https://zenbase.ai"],["Caplight profile","https://www.caplight.com/company/zenbase"]]},
+
+{rank:null, radar:true, name:"Evolvent AI", country:"Singapore", stage:"Angel", refs:{"founded":[3]}, head:"11–50", headC:"lo", url:"https://evolvent.co", seg:"infra", dom:["AI Research"], lvl:1, target:2,
+ loop:"Synthetic data and environments for self-evolving agents \u2014 post-training data for AutoResearch and long-horizon agent tasks, plus RSIBench-Data: can an agent diagnose failures, design data, retrain itself, and use the feedback?",
+ flagship:"RSIBench-Data", people:"Fanqing Meng (NUS, ex-Kimi) + team ex-frontier labs", founded:2026, hq:"Singapore / China",
+ raised:0, raisedD:"\u2013", raisedC:"lo", val:0, valD:"\u2013", valC:"lo", oss:false,
+ note:"$10M+ in training-data contracts with 7 model companies within two months of launch (self-reported). Data/environment vendors normally live on RL List \u2014 included as enabling for its explicitly RSI-focused catalog.",
+ sources:[["Founder announcement \u00b7 X","https://x.com/FanqingMengAI/status/2070884359083860212"],["evolvent.co","https://evolvent.co"],["SG registry","https://companieshouse.sg/evolvent-ai-202630478Z"]]},
+
+{rank:null, name:"Engram", country:"USA", stage:"Series A", refs:{"stage":[2],"raised":[1,2],"val":[1],"head":[1],"founded":[1],"hq":[1]}, head:"11–50", headC:"med", url:"https://www.prnewswire.com/news-releases/engram-launches-with-98m-to-build-ai-that-actually-knows-your-organization-302807126.html", seg:"infra", dom:["Continual Learning","Enterprise"], lvl:1, target:2,
+ loop:"A learned memory layer separated from reasoning: online continual learning without forgetting \u2014 organizational knowledge compressed into a continuously improving memory that cuts token use by 90\u201399%.",
+ flagship:"Engram memory layer", people:"Dan Biderman (CEO), Sabri Eyuboglu (CTO), with Chris Ré; 13 people. Angels incl. Karpathy, Abbeel", founded:2025, hq:"San Francisco, USA",
+ raised:98, raisedD:"$98M", raisedC:"hi", val:0.6, valD:"$600M", valC:"hi", oss:false,
+ note:"Emerged from stealth 2026-06 backed by General Catalyst, Kleiner Perkins and Sequoia \u2014 with Microsoft, Notion, and Harvey partnerships already signed.",
+ sources:[["Launch release \u00b7 2026-06","https://www.prnewswire.com/news-releases/engram-launches-with-98m-to-build-ai-that-actually-knows-your-organization-302807126.html"],["CNBC \u00b7 2026-06","https://www.cnbc.com/2026/06/23/ai-memory-startup-focused-on-cutting-token-costs-raises-98-million.html"]]},
+
+{rank:null, radar:true, name:"Trajectory", country:"USA", stage:"Series A", refs:{"stage":[2],"raised":[2,4],"val":[2,3],"head":[4]}, head:"11\u201350", headC:"med", url:"https://keepingupwith.ai/articles/trajectory-launches-to-solve-ais-stagnation-problem-with-continuous-learning/", seg:"infra", dom:["Enterprise","Continual Learning"], lvl:1, target:2,
+ loop:"Turns live product signals \u2014 corrections, retries, edits \u2014 into weekly post-training runs, so deployed agent models keep improving from real-world use.",
+ flagship:"Continual-learning platform", people:"Ronak Malde, Arjun Karanam, Michael Elabd (ex-DeepMind/Apple/OpenAI/Meta MSL)", founded:2026, hq:"USA",
+ raised:55, raisedD:"$55M", raisedC:"hi", val:0.3, valD:"$300M", valC:"med", oss:false,
+ note:"Conviction led the $15M seed (May 2026; Jeff Dean and Fei-Fei Li as angels); Sequoia led a $40M Series A at $300M three months later. Customers include Clay, Harvey, and Decagon.",
+ sources:[["Launch coverage \u00b7 2026","https://keepingupwith.ai/articles/trajectory-launches-to-solve-ais-stagnation-problem-with-continuous-learning/"],["Series A \u00b7 MarketScreener 2026-08","https://www.marketscreener.com/news/trajectory-technologies-inc-announced-that-it-has-received-40-million-in-funding-from-nvidia-corp-ce7859dbd089f322"],["Axios Pro Rata \u00b7 2026-08","https://www.axios.com/newsletters/axios-pro-rata-d6993bff-2e88-49e9-a309-d73687927ff0"],["Dealroom profile","https://app.dealroom.co/companies/trajectory_5"]]},
+
+{rank:null, radar:true, name:"DeepWisdom", country:"China", stage:"Series A+", refs:{"hq":[3]}, head:"51–200", headC:"med", url:"https://kr-asia.com/from-metagpt-to-atoms-deepwisdom-leads-chinas-push-into-vibe-coding", seg:"infra", dom:["AI Research","Enterprise"], lvl:1, target:2,
+ loop:"MetaGPT and OpenManus (150K+ combined GitHub stars) plus AFlow \u2014 automated evolution of agent workflows (ICLR 2025 oral) \u2014 productized in Atoms, AI teams that build and run software end to end.",
+ flagship:"MetaGPT \u00b7 AFlow \u00b7 Atoms", people:"Chenglin Wu; backed by Ant Group, Cathay, Baidu Ventures, MindWorks", founded:2019, hq:"Xiamen, China (offices in Shenzhen, Shanghai)",
+ raised:31, raisedD:"$31M", raisedC:"med", val:0, valD:"\u2013", valC:"lo", oss:true,
+ note:"Series A/A+ led by Cathay Capital. AFlow is the GEPA-class result here: peer-reviewed automated workflow optimization.",
+ sources:[["KrASIA \u00b7 2026","https://kr-asia.com/from-metagpt-to-atoms-deepwisdom-leads-chinas-push-into-vibe-coding"],["Dealroom \u00b7 Series A","https://app.dealroom.co/news/feed/cathay-capital-leads-deepwisdom-s-31m-series-a-funding-for-ai-multi-agent-startup-platform-1"],["36Kr PitchHub (registry)","https://pitchhub.36kr.com/project/1678548557837312"]]},
+
+// ---------------- RESEARCH & NONPROFIT (n/r) ----------------
+{rank:null, name:"FutureHouse", country:"USA", stage:"Nonprofit", head:"11–50", headC:"med", url:"https://www.futurehouse.org", seg:"research", dom:["Science"], lvl:2, target:3,
+ loop:"Nonprofit moonshot to build an AI Scientist: Robin, Aviary, and ether0 automate literature synthesis and discovery; spun out Edison Scientific for commercialization.",
+ flagship:"Robin · Aviary · ether0", people:"Sam Rodriques, Andrew White", founded:2023, hq:"San Francisco, USA",
+ raised:0, raisedD:"philanthropic", raisedC:"hi", val:0, valD:"–", valC:"lo", oss:true,
+ note:"Schmidt-backed; also runs an AI-for-science postdoc fellowship (from 2026-09).",
+ sources:[["futurehouse.org","https://www.futurehouse.org/about"]]}
+];
+
+/* Category: which layer the loop modifies.
+   auto = AI runs the research loop; output is knowledge
+   self = output feeds back into the system itself (harness, memory, workflows)
+   rsi  = output feeds back into building the next system; gains compound */
+const CAT_RSI = ["Sakana AI", "Ineffable Intelligence", "Recursive Superintelligence", "Adaption", "Ricursive Intelligence", "Mirendil", "Core Automation", "Frontis AI", "Weco AI", "Deep Cogito", "Disarray", "EverMind", "Ndea", "Google DeepMind", "OpenAI", "Anthropic"];
+const CAT_AUTO = ["Inherent", "Discovery Loop", "Autoscience", "Intology", "MiroMind", "Novix", "Lila Sciences", "Periodic Labs", "Edison Scientific", "Latent Labs", "Apodex", "Tetsuwan Scientific", "Potato", "Physical Superintelligence", "FutureHouse", "Elicit"];
+DATA.forEach(d=>{ d.strict = CAT_RSI.includes(d.name) ? "core" : CAT_AUTO.includes(d.name) ? "self" : "enable"; });
+
+/* Curated per-company history. Every dated claim traces to the sources on the entry.
+   Companies without an entry here show "timeline in progress" rather than a guess. */
+const TIMELINES = {
+"Sakana AI":[
+ ["2023","Founded in Tokyo","David Ha, Llion Jones (a Transformer co-author) and Ren Ito start the lab on the thesis that nature-inspired, small-model approaches can compete with brute-force scaling."],
+ ["2024-01","$30M seed","Lux Capital leads, with Khosla Ventures — announced as the largest seed round in Japanese history."],
+ ["2024-08","The AI Scientist","The first end-to-end automated ML research pipeline — ideation, experiments, paper writing and automated review — at roughly $15 per paper."],
+ ["2024-09","$100M+ Series A","NEA, Khosla and Lux lead with Nvidia participating; valuation passes $1B and an Nvidia research partnership begins."],
+ ["2025-05","Darwin Gödel Machine","Agents rewrite their own code and keep the variants that measurably perform better, worth about 30 points on coding benchmarks."],
+ ["2025-09","ShinkaEvolve","Open-source program evolution that discovers novel loss functions on small sample budgets."],
+ ["2025-11","$135M Series B at $2.65B","MUFG, Khosla Ventures, NEA, Lux Capital and In-Q-Tel join."],
+ ["2026-03","The AI Scientist reaches Nature","Peer review at the top of the scientific hierarchy — the strongest public evidence anywhere in this list."],
+ ["2026","A dedicated RSI Lab","Self-improvement becomes its own research organisation inside the company."]],
+
+"Ineffable Intelligence":[
+ ["2025","Founded in London","David Silver, who led reinforcement learning at DeepMind and co-created AlphaGo and AlphaZero, starts the company."],
+ ["2026-04","$1.1B seed at $5.1B","The largest seed round in European history. Sequoia and Lightspeed co-lead, Nvidia puts in a reported $250M+, with DST, Index, Google and the UK Sovereign AI Fund."],
+ ["Goal","A superlearner","Discover knowledge and skills purely from its own experience, with no human data — AlphaZero's self-play logic taken to its limit."]],
+
+"Recursive Superintelligence":[
+ ["2025","Eight co-founders assemble","Richard Socher recruits researchers from Meta FAIR, DeepMind, OpenAI, Salesforce and Uber AI, including Yuandong Tian, Tim Rocktäschel and Jeff Clune; Peter Norvig advises."],
+ ["2026-05","Out of stealth with $650M at $4.65B","GV and Greycroft lead, with Nvidia and AMD. Fewer than 30 employees and no product — the largest bet placed purely on the thesis."],
+ ["2026","Level 1 autonomous training","The stated first milestone, with a first-phase goal of research capacity equivalent to 50,000 doctors."]],
+
+"Lila Sciences":[
+ ["2023","Founded inside Flagship Pioneering","Built as a venture-creation project rather than a garage startup."],
+ ["2025-03","Emerges with $200M seed","Launches the idea of AI science factories: models propose experiments, autonomous labs run them, results train the next model."],
+ ["2025-09","$350M Series A","Total capital reaches $550M at a valuation above $1.3B, with hubs in Boston, San Francisco and London."],
+ ["2026","Roughly 180 people","Up from about 60 a year earlier — the most operationally heavy company on this list."]],
+
+"Periodic Labs":[
+ ["2025","Founded","Liam Fedus, former VP of Research at OpenAI, and Ekin Doğuş Çubuk, who led materials and chemistry at Google Brain and DeepMind."],
+ ["2025-10","Launches with $300M","a16z, Accel, NVentures, Jeff Bezos and Eric Schmidt back robotic physics and chemistry labs that generate proprietary training data."],
+ ["2026-05","Reported raise at $7.5B","Said to be seeking around $500M more, roughly a year after launch."]],
+
+"Edison Scientific":[
+ ["2025","Spun out of FutureHouse","The nonprofit's AI-scientist work gets a commercial vehicle, led by Sam Rodriques."],
+ ["2025-12","Kosmos, and $70M","Ships an agent that runs multi-week autonomous discovery campaigns, compounding findings across cycles rather than single sessions."]],
+
+"Inherent":[
+ ["2025","Founded in London","Tantum Collins, Edward Hughes and Louis Kirsch — all ex-DeepMind, where Hughes co-led the AI Scientist team — with Kaloyan Aleksiev. Kirsch did his PhD with Jürgen Schmidhuber, an early proponent of recursive self-improvement."],
+ ["2026-05","$50M seed out of stealth","Index leads, with Radical Ventures and Nvidia's NVentures; Matt Clifford advises."],
+ ["2026-08","Faraday tops the frontier models","On Replica, its own benchmark of 310 tasks from 100 papers, the agent outscores Claude Opus 4.8 and GPT-5.5 at reproducing published results. Self-reported; no independent verification published."]],
+
+"Adaption":[
+ ["2025","Founded","Sara Hooker starts the company after leading Cohere Labs."],
+ ["2026-02","$50M seed","Emergence Capital, Mozilla Ventures and Fifty Years back the thesis that smarter training beats bigger models."],
+ ["2026","AutoScientist","Automated fine-tuning that raised win rates from 48% to 64% against configurations chosen by Adaption's own researchers."]],
+
+"Ricursive Intelligence":[
+ ["2025","Founded by the AlphaChip authors","Anna Goldie and Azalia Mirhoseini, whose reinforcement-learning method for chip layout shipped in four generations of Google TPUs."],
+ ["2025-11","Launches with a Sequoia-led seed",""],
+ ["2026-01","$300M Series A at $4B","Lightspeed leads two months after launch, with DST, Felicis, Radical and NVentures — $335M in total. The loop reaches silicon: better chips train better models that design better chips."]],
+
+"Mirendil":[
+ ["2026","Founded weeks after leaving Anthropic","Behnam Neyshabur and Harsh Mehta assemble roughly 20 researchers from Anthropic, xAI, DeepMind and OpenAI."],
+ ["2026-03","$200M seed at $1B","a16z, Kleiner Perkins and Nvidia back it — among the largest seed rounds ever raised."],
+ ["2026","$100M+ Google Cloud agreement","A multi-year TPU and GPU commitment to train self-improving systems, aimed at putting frontier-grade R&D tools in the hands of organisations outside the big labs."]],
+
+"Discovery Loop":[
+ ["2026-08","Jeff Dean leaves Google after 27 years","He departs with Sanjay Ghemawat, Quoc Le and Oriol Vinyals — arguably the most senior founding team ever assembled around this thesis."],
+ ["2026-08","Incorporated as a public benefit corporation","Seed co-led by Radical Ventures and Khosla, with Kleiner Perkins, Lightspeed and Doerr Capital. Alphabet invests in the spin-out itself. Amount undisclosed."],
+ ["Goal","Automate the scientific method","Thousands of experiments running in parallel, where the AI proposes, runs, learns and iterates — with recursive self-improvement an explicit research aim."]],
+
+"Poetiq":[
+ ["2025-06","Launches","Shumeet Baluja and Ian Fischer, both long-time Google and DeepMind researchers, become co-CEOs."],
+ ["2025-12","Tops ARC-AGI-2","A six-person team beats the entries from Google and OpenAI on the generalisation benchmark, six months after launching."],
+ ["2026","$45.8M seed","FYRFLY and Surface Ventures co-lead, with Y Combinator, 468 Capital and Operator Collective."]],
+
+"Core Automation":[
+ ["2025-01","Jerry Tworek leaves OpenAI","He had led development of the o1 and o3 reasoning models."],
+ ["2026","Hires from every frontier lab","About a dozen people, including Rohan Anil from Anthropic, Anmol Gulati from DeepMind, and Joanne Jang from OpenAI."],
+ ["2026-04","Reported raise at over $5B","Said to be seeking $500M–$1B, positioning as the world's most automated AI lab. Ceres, the flagship project, targets roughly 1% of state-of-the-art training data with real-time weight updates in production."]],
+
+"Latent Labs":[
+ ["2023","Founded","Simon Kohl leaves DeepMind, where he worked on AlphaFold, to build generative biology."],
+ ["2025","Launches with $50M","Radical Ventures and Sofinnova lead; Jeff Dean and Aidan Gomez invest as angels."],
+ ["Loop","Design, synthesise, learn","LatentX proposes proteins, the wet lab tests them, and the results train the next generation of the model."]],
+
+"Ndea":[
+ ["2025","Founded","François Chollet, creator of Keras and the ARC-AGI benchmark, leaves Google to start the lab with Mike Knoop, co-founder of Zapier."],
+ ["2025","$43M raised","Backed on a deliberately contrarian thesis: deep learning alone cannot adapt efficiently from few examples, and program synthesis is the missing piece."]]
+};
+
+const SEGS = [["all","All"],["pure","Pure-play"],["lab","Frontier labs"],["infra","Infrastructure"],["research","Research"],["radar","Radar"]];
+const SEGNAME = {pure:"PURE-PLAY", lab:"FRONTIER LAB", infra:"INFRA", research:"RESEARCH"};
+const TIERNAME = {core:"RSI", self:"AUTO RESEARCH", enable:"SELF-IMPROVEMENT"};
+/* the tag vocabulary lives up here because the filter tabs are built at wiring time,
+   before the tag-store section below. Duplicated in tools/tagserver.py (VOCAB) — edit both. */
+const TAGS = [
+  ["Model",        "Model",        "Frontier / foundation model work"],
+  ["Harness",      "Harness",      "Agents, scaffolds, the loop around the model"],
+  ["Infra",        "Infra",        "Compute and training infrastructure"],
+  ["Data/Eval",    "Data/Eval",    "Data pipelines, benchmarks, evaluation"],
+  ["Applications", "Applications", "Products built on top of the models"],
+];
+const TIERTIP = {
+  core:"Modifies the deepest layer: the weights and the training process that builds the next model",
+  self:"Automates the research workflow itself — the output is knowledge, papers, and discoveries",
+  enable:"Improves the harness around a frozen model: memory, scaffolding, prompts, workflows"
+};
+const CONF = {hi:['●','conf-hi','confirmed'], med:['◐','conf-med','reported'], lo:['–','conf-lo','unknown']};
+
+let state = {seg:"all", tag:"all", doms:new Set(), countries:new Set(), q:"", sort:"rank", view:"table", open:new Set()};
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+
+function confDot(c){ const [ch,cls,label]=CONF[c]; return `<span class="conf-dot ${cls}" title="${label}">${ch}</span>`; }
+function segBadge(d){
+  const base = `<span class="b-seg ${d.seg==='pure'&&!d.radar?'pure':''}">${SEGNAME[d.seg]}${d.acq?' · ACQ':''}</span>`;
+  return d.radar ? base + ` <span class="b-seg radar" title="Early-stage: below the index bar, on watch for promotion">RADAR</span>` : base;
+}
+function tierBadge(d){ return `<span class="b-tier ${d.strict}" title="${TIERTIP[d.strict]}">${TIERNAME[d.strict]}</span>`; }
+function rankCell(d){
+  if(d.rank) return `<span class="ranknum">#${d.rank}</span>`;
+  if(d.seg==="lab") return `<span class="ranknum nr" title="Frontier lab \u2014 shown apart, not ranked against startups">lab</span>`;
+  if(d.radar) return `<span class="ranknum nr" title="Radar: meets the RSI bar, not yet the index bar">◎</span>`;
+  return `<span class="ranknum nr">${d.acq?'acq':'n/r'}</span>`;
+}
+function sourcesHtml(d){ return d.sources.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])} ↗</a>`).join(""); }
+
+function filtered(){
+  let rows = DATA.filter(d=>{
+    if(state.tag!=="all" && !tagsOf(d).includes(state.tag)) return false;
+    if(state.countries.size && !state.countries.has(d.country)) return false;
+    if(state.q){
+      const hay = (d.name+" "+d.people+" "+d.dom.join(" ")+" "+d.loop+" "+d.hq+" "+(d.flagship||"")+" "+tagsOf(d).join(" ")).toLowerCase();
+      if(!hay.includes(state.q)) return false;
+    }
+    return true;
+  });
+  const ord = d => d.seg==="lab" ? 0 : d.rank ? 1 : !d.radar ? 2 : 3;
+  const LAB_ORDER = {"Google DeepMind":0, "OpenAI":1, "Anthropic":2};   /* evidence order, matches the rank note */
+  rows.sort((a,b)=>{
+    if(state.sort==="rank"){
+      if(ord(a)!==ord(b)) return ord(a)-ord(b);
+      if(a.seg==="lab" && b.seg==="lab") return (LAB_ORDER[a.name]??9)-(LAB_ORDER[b.name]??9);
+      if(a.rank && b.rank) return a.rank-b.rank;
+      return b.raised-a.raised;
+    }
+    if(state.sort==="raised") return b.raised-a.raised;
+    if(state.sort==="valuation") return b.val-a.val;
+    if(state.sort==="founded") return b.founded-a.founded;
+    return a.name.localeCompare(b.name);
+  });
+  if(state.sort==="rank"){
+    /* curated placements (owner): lift X to sit directly above Y. Same-group pairs only —
+       moving across groups would detach a row from its group header. Data sorts stay pure. */
+    for(const [n, above] of [["Novix","Elicit"]]){
+      const i = rows.findIndex(d=>d.name===n), j = rows.findIndex(d=>d.name===above);
+      if(i>=0 && j>=0 && i>j){ const [x] = rows.splice(i,1); rows.splice(j,0,x); }
+    }
+  }
+  return rows;
+}
+
+function render(){
+  const rows = filtered();
+  $("#count").innerHTML = `<b>${rows.length}</b> of ${DATA.length} organizations`;
+  const m = $("#listmount");
+  if(state.view==="cards"){ m.innerHTML = `<div class="cards">${rows.map(cardHtml).join("")}</div>`;
+    m.querySelectorAll(".cardlink").forEach(a=>a.addEventListener("click",e=>{ e.preventDefault(); goOrg(a.dataset.slug); })); }
+  else{
+    const GROUPS = ["Frontier labs \u2014 outside the ranking", "The index", "Tooling & nonprofits \u2014 n/r", "The radar \u25ce"];
+    let body = "", lastG = -1;
+    for(const d of rows){
+      const g = state.sort==="rank" ? (d.seg==="lab" ? 0 : d.rank ? 1 : !d.radar ? 2 : 3) : -1;
+      if(g !== lastG && g >= 0){ body += `<tr class="group"><td colspan="9">${GROUPS[g]}</td></tr>`; lastG = g; }
+      body += rowHtml(d);
+    }
+    m.innerHTML = `<div class="tablewrap"><table>
+      <thead><tr><th>#</th><th>Organization</th><th>Tag</th><th>Stage</th><th>Raised</th><th>Valuation</th><th>Headcount</th><th>Founded</th><th>HQ</th></tr></thead>
+      <tbody>${body}</tbody></table></div>`;
+    wireVerifierChips(m);
+    m.querySelectorAll("tr.row").forEach(tr=>{
+      tr.addEventListener("click",e=>{ if(!e.target.closest("a,button")) goOrg(tr.dataset.slug); });
+      tr.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault(); tr.click();} });
+    });
+  }
+}
+
+function rowHtml(d){
+  return `<tr class="row" data-slug="${slug(d.name)}" tabindex="0" role="link">
+    <td>${rankCell(d)}</td>
+    <td><span class="orgname">${esc(d.name)}</span>${d.oss?' <span class="b-oss">OSS</span>':''}<div class="orgsub">${esc(d.people)}</div></td>
+    <td>${tagCell(d)}</td>
+    <td class="num">${esc(d.stage||"–")}</td>
+    <td class="num">${esc(d.raisedD)} ${confDot(d.raisedC)}</td>
+    <td class="num">${esc(d.valD)} ${d.valD!=="–"&&d.valD!=="acq"?confDot(d.valC):""}</td>
+    <td class="num">${esc(d.head||"–")} ${d.head?confDot(d.headC):""}</td>
+    <td class="num">${d.founded}</td>
+    <td class="hqcell">${esc(d.hq)}</td>
+  </tr>`;
+}
+
+function cardHtml(d){
+  return `<div class="card">
+    <div class="card-top">${rankCell(d)}<h3><a href="#/org/${slug(d.name)}" data-slug="${slug(d.name)}" class="cardlink">${esc(d.name)}</a></h3></div>
+    <div class="card-badges">${tierBadge(d)}${d.oss?'<span class="b-oss">OSS</span>':''}</div>
+    <p class="loop">${d.loop}</p>
+    <div class="card-stats">
+      <div><h4>Stage</h4><p>${esc(d.stage||"–")}</p></div>
+      <div><h4>Raised</h4><p>${esc(d.raisedD)} ${confDot(d.raisedC)}</p></div>
+      <div><h4>Valuation</h4><p>${esc(d.valD)}</p></div>
+      <div><h4>Founded</h4><p>${d.founded}</p></div>
+      <div><h4>Headcount</h4><p>${esc(d.head||"–")} ${d.head?confDot(d.headC):""}</p></div>
+      <div><h4>Verifier</h4><p>${esc(verOf(d).join(", ")||"–")}</p></div>
+      <div style="grid-column:1/-1"><h4>Tags</h4><p style="white-space:normal">${esc(tagsOf(d).join(" · ")||"–")}</p></div>
+      <div style="grid-column:1/-1"><h4>HQ · People</h4><p style="white-space:normal">${esc(d.hq)} · ${esc(d.people)}</p></div>
+    </div>
+    <div class="src">${sourcesHtml(d)}</div>
+  </div>`;
+}
+
+/* controls */
+const tagtabs = $("#tagtabs");
+[["all","All tags","Show every organization"], ...TAGS].forEach(([v,l,tip])=>{
+  const b=document.createElement("button");
+  b.textContent=l; b.title = tip;
+  b.setAttribute("aria-pressed", v===state.tag);
+  b.onclick=()=>{ state.tag=v; tagtabs.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed", x===b)); render(); };
+  tagtabs.appendChild(b);
+});
+const countrychips = $("#countrychips");
+(function(){
+  const counts = {};
+  DATA.forEach(d=>{ if(d.country) counts[d.country]=(counts[d.country]||0)+1; });
+  Object.keys(counts).sort((a,b)=>counts[b]-counts[a]).forEach(c=>{
+    const b=document.createElement("button");
+    b.innerHTML=`${esc(c)} <span class="n">${counts[c]}</span>`; b.setAttribute("aria-pressed","false");
+    b.onclick=()=>{
+      state.countries.has(c)?state.countries.delete(c):state.countries.add(c);
+      b.setAttribute("aria-pressed", state.countries.has(c)); render();
+    };
+    countrychips.appendChild(b);
+  });
+})();
+$("#q").addEventListener("input",e=>{ state.q=e.target.value.trim().toLowerCase(); render(); });
+$("#sort").addEventListener("change",e=>{ state.sort=e.target.value; render(); });
+$("#v-table").onclick=()=>{ state.view="table"; $("#v-table").setAttribute("aria-pressed","true"); $("#v-cards").setAttribute("aria-pressed","false"); render(); };
+$("#v-cards").onclick=()=>{ state.view="cards"; $("#v-cards").setAttribute("aria-pressed","true"); $("#v-table").setAttribute("aria-pressed","false"); render(); };
+
+
+/* ---------- org detail pages (hash routing, shareable URLs) ---------- */
+function slug(n){ return n.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,""); }
+
+function timelineHtml(d){
+  const t = TIMELINES[d.name];
+  if(!t) return `<p class="tl-empty">Timeline in progress — the sources below are what this entry currently rests on.</p>`;
+  return `<div class="timeline">${t.map(([date,title,body])=>`
+    <div class="tl-item">
+      <div class="tl-date">${esc(date)}</div>
+      <h3>${esc(title)}</h3>
+      ${body?`<p>${body}</p>`:""}
+    </div>`).join("")}</div>`;
+}
+
+function orgHtml(d){
+  const refSup = key => {
+    const idxs = (d.refs||{})[key];
+    if(!idxs || !idxs.length) return "";
+    return `<sup class="ref">${idxs.map(i=>d.sources[i-1]?`<a href="${d.sources[i-1][1]}" target="_blank" rel="noopener" title="${esc(d.sources[i-1][0])}">${i}</a>`:"").join(",")}</sup>`;
+  };
+  const fact = (h,v,key) => `<div><h4>${h}</h4><p>${v}${key?refSup(key):""}</p></div>`;
+  return `<a class="backlink" href="#">← All organizations</a>
+    <div class="org-head">
+      <div>
+        <h1 class="org-title">${esc(d.name)}</h1>
+        <div class="org-people">${esc(d.people)}</div>
+      </div>
+      <div class="org-marks">${rankCell(d)}${tierBadge(d)}${d.oss?'<span class="b-oss">OSS</span>':''}</div>
+    </div>
+    <div class="factgrid">
+      ${fact("Stage", esc(d.stage||"–"), "stage")}
+      ${fact("Raised", esc(d.raisedD)+" "+confDot(d.raisedC), "raised")}
+      ${fact("Valuation", esc(d.valD)+(d.valD!=="–"&&d.valD!=="acq"?" "+confDot(d.valC):""), "val")}
+      ${fact("Headcount", esc(d.head||"–")+(d.head?" "+confDot(d.headC):""), "head")}
+      ${fact("Founded", d.founded, "founded")}
+      ${fact("Country", esc(d.country||"–"))}
+      ${fact("Verifier", esc(verOf(d).join(", ")||"–"))}
+      ${fact("Tags", esc(tagsOf(d).join(" · ")||"–"))}
+    </div>
+    <div class="org-sec"><h3>Headquarters</h3><p>${esc(d.hq)}${refSup("hq")}</p></div>
+    <div class="org-sec"><h3>Their mission</h3><p>${d.loop}</p></div>
+    <div class="org-sec"><h3>Flagship</h3><p>${esc(d.flagship)}</p></div>
+    <div class="org-sec"><h3>Timeline</h3>${timelineHtml(d)}</div>
+    <div class="org-sec"><h3>Sources</h3><p class="src">${d.sources.map((x,i)=>`<a href="${x[1]}" target="_blank" rel="noopener">[${i+1}] ${esc(x[0])} ↗</a>`).join("")}<a href="${d.url}" target="_blank" rel="noopener">main link ↗</a></p></div>`;
+}
+
+/* ---------- verifier tags (Jinyan / Jiabing / Yu) ----------
+   Multiple verifiers per entry. Toggles persist per-browser in localStorage;
+   bake them into DATA (verifiers:[...]) via a commit to make them shared. */
+const VERIFIERS = ["Jinyan","Jiabing","Yu"];
+let verOverlay = {};
+try{ verOverlay = JSON.parse(localStorage.getItem("rsi-verifiers")||"{}"); }catch(e){}
+function verOf(d){ const sl=slug(d.name); return verOverlay[sl] !== undefined ? verOverlay[sl] : (d.verifiers||[]); }
+function toggleVer(sl, name, base){
+  const cur = verOverlay[sl] !== undefined ? verOverlay[sl].slice() : base.slice();
+  const i = cur.indexOf(name);
+  i>=0 ? cur.splice(i,1) : cur.push(name);
+  verOverlay[sl] = cur;
+  try{ localStorage.setItem("rsi-verifiers", JSON.stringify(verOverlay)); }catch(e){}
+  return cur;
+}
+function verifierCell(d){
+  const cur = verOf(d);
+  return `<div class="ver-chips" data-slug="${slug(d.name)}">
+    ${VERIFIERS.map(v=>`<button type="button" aria-pressed="${cur.includes(v)}" data-v="${v}">${v}</button>`).join("")}
+  </div>`;
+}
+function wireVerifierChips(root){
+  root.querySelectorAll(".ver-chips button").forEach(b=>{
+    b.addEventListener("click", e=>{
+      e.stopPropagation();
+      const wrap=b.closest(".ver-chips"), d=DATA.find(x=>slug(x.name)===wrap.dataset.slug);
+      const cur=toggleVer(wrap.dataset.slug, b.dataset.v, d.verifiers||[]);
+      b.setAttribute("aria-pressed", cur.includes(b.dataset.v));
+    });
+  });
+}
+
+/* ---------- company tags (Model / Harness / Infra / Data/Eval / Applications) ----------
+   A company can carry several. Clicks write straight through to the tag server
+   (tools/tagserver.py -> data/tags.json + data/tags-log.jsonl); when the page is
+   opened without that server it first tries the read-only snapshot shipped with the
+   site (data/tags.json — the static host serves it, clicks there stay per-browser),
+   and off the filesystem it degrades to the same localStorage the verifier chips use. */
+const TAG_API = "/api/tags";                         /* the TAGS vocabulary itself is up with the other constants */
+const TAG_SNAPSHOT = "data/tags.json";               /* read-only fallback on a static host */
+const TAG_LS = "rsi-tags";
+let tagOverlay = {};
+try{ tagOverlay = JSON.parse(localStorage.getItem(TAG_LS)||"{}"); }catch(e){}   /* display cache for file:// opens */
+
+function tagsOf(d){ const sl=slug(d.name); return tagOverlay[sl] !== undefined ? tagOverlay[sl] : (d.tags||[]); }
+/* v0.88: tags are fixed data — display only. The click-to-toggle editor (toggleTag /
+   wireTagChips / saveTags / actor prompt / status line) is gone; the tagserver POST
+   endpoint still exists but nothing on the page calls it. Only assigned tags render. */
+function tagCell(d){
+  const cur = tagsOf(d);
+  return `<div class="tag-chips">${
+    TAGS.map(([v,label,tip])=>`<span class="tagchip${cur.includes(v)?"":" off"}" title="${esc(tip)}">${esc(label)}</span>`).join("")
+  }</div>`;
+}
+function bootTags(){
+  if(!/^https?:$/.test(location.protocol)) return;
+  fetch(TAG_API, {headers:{"Accept":"application/json"}})
+    .then(r=> r.ok ? r.json() : Promise.reject(new Error("HTTP "+r.status)))
+    .then(j=>{
+      if(!j || !j.ok || typeof j.tags !== "object") throw new Error("unexpected response");
+      tagOverlay = j.tags;                            /* the server is the source of truth */
+      try{ localStorage.setItem(TAG_LS, JSON.stringify(tagOverlay)); }catch(e){}
+      render();
+      if(viewSlug) route();
+    })
+    .catch(()=> fetch(TAG_SNAPSHOT, {headers:{"Accept":"application/json"}})   /* no server: try the shipped snapshot */
+      .then(r=> r.ok ? r.json() : Promise.reject(new Error("HTTP "+r.status)))
+      .then(j=>{
+        if(!j || typeof j !== "object" || Array.isArray(j)) throw new Error("unexpected response");
+        tagOverlay = j;                                 /* committed state wins over a stale local copy */
+        try{ localStorage.setItem(TAG_LS, JSON.stringify(tagOverlay)); }catch(e){}
+        render();
+        if(viewSlug) route();
+      })
+      .catch(()=>{}));                                 /* nothing anywhere: stay on the local cache */
+}
+
+let viewSlug = null;
+
+function goOrg(sl){                                  /* sl = slug, or null for the directory */
+  viewSlug = sl;
+  /* Mirror to the hash for shareable URLs and the back button, but only where the page
+     has a real origin — a data: URL host rejects the assignment and logs a console error. */
+  if(/^https?:$/.test(location.protocol)){
+    try{ location.hash = sl ? "#/org/"+sl : ""; }catch(e){}
+  }
+  route();
+}
+
+function route(){
+  const m = /^#\/org\/(.+)$/.exec(location.hash || "");
+  if(m) viewSlug = decodeURIComponent(m[1]);
+  else if(location.hash === "" && viewSlugFromHashOnly) viewSlug = null;
+
+  const d = viewSlug && DATA.find(x=>slug(x.name)===viewSlug);
+  const hero = document.querySelector(".hero");
+  const dir = document.getElementById("directory");
+  const view = document.getElementById("orgview");
+  const tk = document.getElementById("takeoff");
+
+  if(d){
+    view.querySelector(".wrap").innerHTML = orgHtml(d);
+    view.querySelector(".backlink").addEventListener("click", e=>{ e.preventDefault(); goOrg(null); });
+    view.hidden = false; hero.hidden = true; dir.hidden = true; if(tk) tk.hidden = true;
+    document.title = d.name + " — RSI List";
+  } else {
+    view.hidden = true; hero.hidden = false; dir.hidden = false; if(tk) tk.hidden = false;
+    document.title = "RSI List";
+  }
+  window.scrollTo(0,0);
+}
+
+/* Only let an empty hash clear the view where the hash actually tracks state —
+   in sandboxes that serve the page from a data: URL, assignment is a no-op. */
+let viewSlugFromHashOnly = false;
+addEventListener("hashchange", ()=>{ viewSlugFromHashOnly = true; route(); });
+
+/* ---------- hero stats count-up ---------- */
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+/* Meta-counts of the list itself only — a new quantitative claim would need a source. */
+const STATS = {
+  orgs:{target:DATA.length, fmt:v=>String(Math.round(v))},
+  rank:{target:DATA.filter(d=>d.rank).length, fmt:v=>String(Math.round(v))},
+  labs:{target:DATA.filter(d=>d.seg==="lab").length, fmt:v=>String(Math.round(v))},
+  src:{target:DATA.reduce((a,d)=>a+(d.sources?d.sources.length:0),0), fmt:v=>String(Math.round(v))}
+};
+let countRun = 0;
+function countUp(el, spec, i, run){
+  if(REDUCED){ el.textContent = spec.fmt(spec.target); return; }
+  const dur = 1500 + i*80, t0 = performance.now() + 380 + i*90;
+  function tick(now){
+    if(run !== countRun) return;                    /* a newer run took over */
+    const p = Math.min(1, Math.max(0, (now - t0)/dur));
+    const e = 1 - Math.pow(1-p, 3);
+    el.textContent = spec.fmt(spec.target*e);
+    if(p < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+{
+  /* Replays every time the stat row scrolls back into view, not just once.
+     (v0.70 removed the stat row from the hero — guarded so the code survives either way.) */
+  const row = document.querySelector(".statrow");
+  if(row){
+  const els = [...document.querySelectorAll(".stat-val")];
+  let visible = false;
+  const io = new IntersectionObserver(entries=>{
+    const isIn = entries.some(e=>e.isIntersecting);
+    if(isIn && !visible){
+      const run = ++countRun;
+      els.forEach((el,i)=>countUp(el, STATS[el.dataset.stat], i, run));
+    }
+    visible = isIn;
+  }, {threshold:.3});
+  io.observe(row);
+  }
+}
+
+/* ---------- dot-matrix character rain over the hero sky ---------- */
+{
+  const rain = document.querySelector(".rain");
+  if(rain && !REDUCED){
+    /* Terminal-dump look: aligned rows, characters arriving in short clusters with
+       long gaps, denser at the top of the sky and thinning out toward the dunes. */
+    const chars = "0885S6#B90S8", COLS = Math.min(96, Math.max(48, (rain.clientWidth||innerWidth)/22|0));
+    const ROWS = Math.max(10, ((rain.clientHeight||innerHeight*.58)/ (innerHeight*.042))|0);
+    let html = "";
+    for(let r = 0; r < ROWS; r++){
+      const density = .34 * (1 - .75*(r/ROWS));
+      let line = "", on = false;
+      for(let c = 0; c < COLS; c++){
+        if(on){ if(Math.random() < .45) on = false; }
+        else if(Math.random() < density){ on = true; }
+        line += on ? chars[Math.random()*chars.length|0] : " ";
+      }
+      const o = (.3 + Math.random()*.55).toFixed(2);
+      const fl = Math.random() < .22 ? ` style="opacity:${o};animation:flick ${(3+Math.random()*5).toFixed(1)}s steps(2) ${(Math.random()*6).toFixed(1)}s infinite"` : ` style="opacity:${o}"`;
+      html += `<div${fl}>${line}</div>`;
+    }
+    rain.innerHTML = html;
+  }
+}
+
+/* ---------- scroll reveal + in-page nav ---------- */
+document.getElementById("listmount").classList.add("sr");
+{
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } });
+  }, {threshold:.08});
+  document.querySelectorAll(".sr").forEach(el=>io.observe(el));
+}
+/* The nav pill lives with the hero; fade it out once the reader is in the list. */
+{
+  const topbar = document.querySelector(".topbar");
+  const onScroll = ()=> topbar.classList.toggle("away", scrollY > 340);
+  addEventListener("scroll", onScroll, {passive:true});
+  onScroll();
+}
+
+/* Anchor links scroll directly instead of setting the hash — route() would scrollTo(0,0). */
+document.querySelectorAll(".navlink").forEach(a=>{
+  a.addEventListener("click", e=>{
+    const t = document.getElementById(a.getAttribute("href").slice(1));
+    if(!t) return;
+    e.preventDefault();
+    if(viewSlug) goOrg(null);
+    t.scrollIntoView();
+  });
+});
+
+/* ---------- the takeoff: the field's timeline laid over its money curve ----------
+   FIELD_EVENTS mirrors charts/events.js (synced 2026-08-31, the 31-company/$5.8B revision;
+   keep the two in step when the charts folder gains rounds). Three kinds are drawn:
+     "cap" — a dated, disclosed round (amt in $M): a step in the curve; a few carry labels.
+     "ev"  — a shipped result: a filled milestone node on the curve.
+     "org" — a company launch: a hollow milestone node on the curve.
+   The four capx entries in charts/events.js (totals with no public round date: Intology,
+   Ndea, MiroMind, DeepWisdom) are excluded here by design — the footnote says so.
+   Frontier-lab rounds are excluded so startups share one scale; lab RESULTS stay.
+   Category is derived from CAT_RSI / CAT_AUTO at runtime, never stored.
+   sl = short label; lab:"b" marks the rounds that get text beside their riser. */
+const FIELD_EVENTS = [
+  {d:"2023-03", co:"Frontis AI",             kind:"cap", amt:30,   t:"Angel — ~$30M (Qiming; ¥ hundreds of millions)"},
+  {d:"2023-07", co:"Sakana AI",              kind:"org", t:"Founded in Tokyo by David Ha and Llion Jones", sl:"founded in Tokyo"},
+  {d:"2023-09", co:"Elicit",                 kind:"cap", amt:9,    t:"Seed — $9M; becomes a public benefit corporation"},
+  {d:"2024-01", co:"Sakana AI",              kind:"cap", amt:30,   t:"Seed — $30M", lab:"b", sl:"Seed · $30M"},
+  {d:"2024-03", co:"OpenPipe",               kind:"cap", amt:6.7,  t:"Seed — $6.7M (Costanoa)"},
+  {d:"2024-03", co:"Asari AI",               kind:"cap", amt:14,   t:"Seed — $14M"},
+  {d:"2024-08", co:"Sakana AI",              kind:"ev",  t:"The AI Scientist — first end-to-end AI-written papers", sl:"The AI Scientist"},
+  {d:"2024-09", co:"Sakana AI",              kind:"cap", amt:100,  t:"Series A — $100M+ at $1.5B (NVIDIA joins)"},
+  {d:"2024-09", co:"Letta",                  kind:"cap", amt:10,   t:"Seed — $10M at $70M (Felicis)"},
+  {d:"2024-12", co:"Tetsuwan Scientific",    kind:"cap", amt:2.7,  t:"Pre-seed — $2.7M"},
+  {d:"2025-01", co:"Ndea",                   kind:"org", t:"François Chollet announces Ndea — program-synthesis path to AGI", sl:"Chollet announces Ndea"},
+  {d:"2025-02", co:"Latent Labs",            kind:"cap", amt:50,   t:"Out of stealth — $50M ($10M seed + $40M Series A)"},
+  {d:"2025-02", co:"Elicit",                 kind:"cap", amt:22,   t:"Series A — $22M at $100M"},
+  {d:"2025-03", co:"Lila Sciences",          kind:"cap", amt:200,  t:"Seed — $200M for autonomous science", lab:"b", sl:"$200M seed"},
+  {d:"2025-04", co:"Potato",                 kind:"cap", amt:4.5,  t:"Seed — $4.5M (Draper)"},
+  {d:"2025-05", co:"Google DeepMind",        kind:"ev",  t:"AlphaEvolve — evolved code improves Gemini training", sl:"AlphaEvolve"},
+  {d:"2025-05", co:"Sakana AI",              kind:"ev",  t:"Darwin Gödel Machine — agent rewrites its own code", sl:"Darwin Gödel Machine"},
+  {d:"2025-07", co:"Intology",               kind:"ev",  t:"Zochi — AI-authored paper passes ACL peer review", sl:"Zochi passes ACL"},
+  {d:"2025-07", co:"Weco AI",                kind:"cap", amt:8,    t:"Seed — $8M (Golden Ventures)"},
+  {d:"2025-08", co:"Deep Cogito",            kind:"cap", amt:13,   t:"Seed — $13M"},
+  {d:"2025-09", co:"Sakana AI",              kind:"ev",  t:"ShinkaEvolve — open evolutionary program search", sl:"ShinkaEvolve"},
+  {d:"2025-09", co:"Periodic Labs",          kind:"cap", amt:300,  t:"Seed — $300M, ex-DeepMind/OpenAI founders", lab:"b", sl:"$300M seed"},
+  {d:"2025-10", co:"Lila Sciences",          kind:"cap", amt:350,  t:"Series A — $350M at >$1.3B, closed in two parts (NVentures joins)"},
+  {d:"2025-11", co:"Sakana AI",              kind:"cap", amt:135,  t:"Series B — $135M at $2.65B; official cumulative ¥66B (~$412M)"},
+  {d:"2025-11", co:"Ricursive Intelligence", kind:"cap", amt:35,   t:"Seed — $35M"},
+  {d:"2025-12", co:"Edison Scientific",      kind:"ev",  t:"Kosmos — autonomous discovery agent ships", sl:"Kosmos ships"},
+  {d:"2025-12", co:"Edison Scientific",      kind:"cap", amt:70,   t:"Seed — $70M at ~$250M"},
+  {d:"2025-12", co:"Poetiq",                 kind:"ev",  t:"Tops the ARC-AGI-2 leaderboard", sl:"tops ARC-AGI-2"},
+  {d:"2026-01", co:"Ricursive Intelligence", kind:"cap", amt:300,  t:"Series A — $300M at $4B for self-improving chip design"},
+  {d:"2026-02", co:"Adaption",               kind:"cap", amt:50,   t:"Seed — $50M"},
+  {d:"2026-03", co:"Sakana AI",              kind:"ev",  t:"AI Scientist paper published in Nature", sl:"AI Scientist in Nature"},
+  {d:"2026-03", co:"OpenAI",                 kind:"ev",  t:"Roadmap: automated AI researcher by 2028", sl:"researcher roadmap"},
+  {d:"2026-03", co:"Autoscience",            kind:"cap", amt:14,   t:"Seed — $14M"},
+  {d:"2026-03", co:"Mirendil",               kind:"cap", amt:200,  t:"Seed — $200M at $1B"},
+  {d:"2026-03", co:"Deep Cogito",            kind:"cap", amt:40,   t:"Series A — $40M"},
+  {d:"2026-04", co:"Ineffable Intelligence", kind:"cap", amt:1100, t:"Seed — $1.1B at $5.1B, largest in the field", lab:"b", sl:"$1.1B seed"},
+  {d:"2026-04", co:"Core Automation",        kind:"cap", amt:100,  t:"First round — $100M"},
+  {d:"2026-05", co:"Recursive Superintelligence", kind:"cap", amt:650, t:"Out of stealth with $650M at $4.65B"},
+  {d:"2026-05", co:"Inherent",               kind:"cap", amt:50,   t:"Seed — $50M"},
+  {d:"2026-05", co:"Trajectory",             kind:"cap", amt:15,   t:"Seed — $15M"},
+  {d:"2026-06", co:"Periodic Labs",          kind:"cap", amt:808,  t:"Series A — ~$808M at $7.5B", lab:"b", sl:"~$808M Series A"},
+  {d:"2026-06", co:"Engram",                 kind:"cap", amt:98,   t:"Series A — $98M at $600M"},
+  {d:"2026-07", co:"Core Automation",        kind:"cap", amt:432,  t:"$432M raise at $3.62B (SEC filing)"},
+  {d:"2026-08", co:"Inherent",               kind:"ev",  t:"Faraday model tops frontier models on chem/bio", sl:"Faraday tops chem"},
+  {d:"2026-08", co:"Trajectory",             kind:"cap", amt:40,   t:"Series A — $40M at $300M (Sequoia)"},
+  {d:"2026-08", co:"Discovery Loop",         kind:"org", t:"Jeff Dean leaves Google to co-found Discovery Loop", sl:"Jeff Dean co-founds"},
+];
+
+function buildTakeoff(){
+  const box = document.getElementById("tk-chart"); if(!box) return;
+  /* Survey-figure form: ONE money curve as the spine; every milestone (result ●, launch ○) and
+     each field-defining round is an annotation floating in the empty air above the curve, at
+     staggered heights — placed greedily from the curve upward with measured Plex-Mono widths,
+     sliding along its level when crowded, climbing when blocked. A stem drops from each label
+     to its node. Hovering an annotation (label or node) lights it and dims the rest.
+     Category stays in the tooltip and the table — one hue system on the shape, deliberately. */
+  const CATN = {rsi:"RSI", auto:"Auto research", self:"Self-improvement"};
+  const catOf = co => CAT_RSI.includes(co) ? "rsi" : CAT_AUTO.includes(co) ? "auto" : "self";
+  const SHORT = {"Ineffable Intelligence":"Ineffable","Recursive Superintelligence":"Recursive SI","Ricursive Intelligence":"Ricursive",
+                 "Edison Scientific":"Edison","Google DeepMind":"DeepMind","Lila Sciences":"Lila","Periodic Labs":"Periodic",
+                 "Frontis AI":"Frontis","Tetsuwan Scientific":"Tetsuwan","Asari AI":"Asari","Weco AI":"Weco"};
+  const nm = co => SHORT[co] || co;
+  const mo = d => { const [y,m] = d.split("-").map(Number); return y + (m-.5)/12; };
+  const today = new Date(), NOW = today.getFullYear() + (today.getMonth()+.5)/12;
+  const fmtM = m => m >= 1000 ? "$"+(m/1000).toFixed(1).replace(/\.0$/,"")+"B" : "$"+Math.round(m)+"M";
+  const byName = Object.fromEntries(DATA.map(d=>[d.name,d]));
+  const ACC = "#E8A87C", INK = "#F2F3F1", MUT = "#8E8E8E", FAINT = "#6E6E6E", SURF = "#0e0d10";
+
+  const evs = FIELD_EVENTS.slice().sort((a,b)=> a.d.localeCompare(b.d) || (b.amt||0)-(a.amt||0));
+  const caps = evs.filter(e=>e.kind==="cap"), miles = evs.filter(e=>e.kind==="ev" || e.kind==="org");
+  const total = caps.reduce((s,e)=>s+e.amt,0);
+  const total26 = caps.filter(e=>e.d>="2026").reduce((s,e)=>s+e.amt,0);
+  const pct26 = Math.round(total26/total*100);
+  const startups = DATA.filter(d=>d.seg!=="lab");
+  const siteTotal = startups.reduce((s,d)=>s+(d.raised||0),0);
+  const since25 = startups.filter(d=>+d.founded>=2025).length;
+  const months26 = today.getMonth()+1;
+
+  const W=1240, H=560, PL=72, PR=150, PB=62;
+  const TOP=104, base=H-PB;                                        /* TOP: top of the y-scale; labels may float above it */
+  const xa=2023.05, xb=NOW+.08;
+  const X = t => PL + (t-xa)/(xb-xa)*(W-PL-PR);
+  const yMax = Math.ceil(total/1000)*1000 + 300;
+  const Y = v => base - v/yMax*(base-TOP);
+  const r2 = n => Math.round(n*10)/10;
+  const CW11 = 6.62, CW10 = 6.02;
+  let g = "";
+
+  for(let yr=2024; yr<=Math.floor(xb); yr++){
+    g += `<line x1="${r2(X(yr))}" y1="${TOP-8}" x2="${r2(X(yr))}" y2="${base}" stroke="rgba(255,255,255,.08)"/>
+          <text x="${r2(X(yr))+6}" y="${base+17}" font-size="11" fill="${MUT}">${yr}</text>`;
+  }
+  g += `<text x="${PL+4}" y="${base+17}" font-size="11" fill="${MUT}">2023</text>`;
+  for(let v=1000; v<yMax; v+=1000){
+    g += `<line x1="${PL-6}" y1="${r2(Y(v))}" x2="${W-PR+8}" y2="${r2(Y(v))}" stroke="rgba(255,255,255,.07)"/>
+          <text x="${PL-12}" y="${r2(Y(v))+4}" font-size="11" fill="${FAINT}" text-anchor="end">${fmtM(v)}</text>`;
+  }
+  g += `<line x1="${PL-6}" y1="${base}" x2="${W-PR+8}" y2="${base}" stroke="rgba(255,255,255,.16)"/>`;
+  g += `<text x="${PL-12}" y="${TOP-8}" font-size="10" fill="${FAINT}" text-anchor="end" letter-spacing=".1em">CAPITAL</text>
+        <text x="${PL-12}" y="${TOP+4}" font-size="9.5" fill="${FAINT}" text-anchor="end">disclosed</text>`;
+  g += `<line x1="${r2(X(NOW))}" y1="${TOP-8}" x2="${r2(X(NOW))}" y2="${base}" stroke="${ACC}" opacity=".35"/>
+        <text x="${r2(X(NOW))}" y="${base+17}" font-size="10.5" fill="#F0C29B" text-anchor="middle">now</text>`;
+  const bx0 = r2(X(2026)), bx1 = r2(X(NOW)), by = base+30;
+  g += `<path d="M ${bx0} ${by-5} V ${by} H ${bx1} V ${by-5}" fill="none" stroke="rgba(255,255,255,.3)"/>
+        <text x="${r2((bx0+bx1)/2)}" y="${by+16}" font-size="11" fill="${INK}" text-anchor="middle">2026 so far <tspan fill="${MUT}">· ${pct26}% of all this capital, in ${months26} months</tspan></text>`;
+
+  /* the spine */
+  const byM = {}; for(const e of caps) byM[mo(e.d)] = (byM[mo(e.d)]||0) + e.amt;
+  const steps = Object.keys(byM).map(Number).sort((a,b)=>a-b);
+  let cum = 0, path = `M ${r2(X(xa))} ${r2(Y(0))}`;
+  const level = [];
+  for(const t of steps){ cum += byM[t]; path += ` H ${r2(X(t))} V ${r2(Y(cum))}`; level.push([t, cum]); }
+  path += ` H ${r2(X(NOW))}`;
+  const cumAt = t => { let c = 0; for(const [tt,cc] of level){ if(tt <= t) c = cc; } return c; };
+  const curveYatX = px => { const t = xa + (px-PL)/(W-PL-PR)*(xb-xa); return Y(cumAt(t)); };
+  /* spine paths sit in a clipped group so the growth sweep can reveal them left→right;
+     the clip rect ships full-width so the chart is whole even if the animation never runs */
+  g += `<defs><clipPath id="tkclip"><rect x="0" y="0" width="${W}" height="${H}"/></clipPath></defs>`;
+  g += `<g clip-path="url(#tkclip)">
+          <path d="${path} V ${base} H ${r2(X(xa))} Z" fill="${ACC}" opacity=".13"/>
+          <path d="${path}" fill="none" stroke="${ACC}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+        </g>`;
+  g += `<g class="tk-end tk-pre" data-ax="${r2(X(NOW))}">
+          <circle cx="${r2(X(NOW))}" cy="${r2(Y(total))}" r="5" fill="${ACC}" stroke="${SURF}" stroke-width="2"/>
+          <text x="${r2(X(NOW))+14}" y="${r2(Y(total))+4}" font-size="10.5" font-weight="600" fill="${INK}">${fmtM(total)}</text>
+          <text x="${r2(X(NOW))+14}" y="${r2(Y(total))+18}" font-size="10.5" fill="${MUT}">${caps.length} dated rounds</text>
+        </g>`;
+
+  /* marks: every round step is hoverable; annotated events are collected for the label engine */
+  const marks = [], annos = [];
+  let run = 0;
+  for(const e of caps){
+    const before = run; run += e.amt;
+    const t = mo(e.d), x = X(t), yTop = Y(cumAt(t)), yBot = Y(cumAt(t) - byM[t]);
+    const i = marks.push({...e, cat:catOf(e.co), x, y:(yTop+yBot)/2, hit:[x-12, yTop-4, 24, Math.max(yBot-yTop+8, 24)], cum:run}) - 1;
+    if(e.lab === "b") annos.push({m:marks[i], i, x, y:(Y(before)+Y(run))/2, l:`${nm(e.co)} · ${e.sl}`});
+  }
+  const monthX = {};
+  for(const e of miles){
+    const t = mo(e.d);
+    let x = X(t);
+    const k = Math.round(x); x += (monthX[k] = (monthX[k]||0) + 1) > 1 ? (monthX[k]-1)*8 : 0;
+    const y = Y(cumAt(t));
+    const i = marks.push({...e, cat:catOf(e.co), x, y, hit:[x-12, y-12, 24, 24]}) - 1;
+    annos.push({m:marks[i], i, x, y, l:`${nm(e.co)} · ${e.sl}`});
+  }
+
+  /* label engine — the middle form between fixed top rows and curve-hugging: every leader is at
+     least 44px, and the starting height cycles through three tiers (44/72/100px above the node)
+     so neighbours stagger by construction; when blocked, a label slides along its level (≤SHIFT)
+     or climbs another 26px. Labels stay above the curve, and the endpoint figure is pre-blocked. */
+  const STEP = 26, SHIFT = 130, blocks = [];
+  /* for a given label level, the rightmost x still clear of the climbing curve —
+     lets a label tuck in just left of the steep section instead of fleeing to the top row */
+  const xClear = fy => { for(const [t,cc] of level){ if(Y(cc) < fy + 18) return X(t); } return X(NOW); };                       /* short slides only in the first pass — prefer changing level over forming label-trains */
+  blocks.push({x0:X(NOW)+8, x1:W-8, y:Y(total)+7}, {x0:X(NOW)+8, x1:W-8, y:Y(total)+24});
+  annos.sort((a,b)=>a.x-b.x).forEach((a, idx)=>{
+    const w = a.l.length*CW10 + 12;
+    const lo = 16+w/2, hi = X(NOW) - 6 - w/2;
+    /* candidate levels span the whole frame [TOP+8, base-34], tried nearest-first to the tiered
+       preferred height — so a top-of-curve node's label falls LEFT into the empty mid-air with an
+       elbow, instead of climbing out of the frame */
+    const pref = Math.max(TOP+8, Math.min(a.y - 44 - (idx%3)*STEP, base-40));
+    const levels = [];
+    for(let fy = TOP+8; fy < base-34; fy += STEP) levels.push(fy);
+    levels.sort((p,q)=>Math.abs(p-pref)-Math.abs(q-pref));
+    /* one pass: levels nearest the label's own node height first, so vertical (and, along the
+       cliff, horizontal) order follows chronology; within a level, the straightest valid spot
+       wins — own x, then tucking in against the curve, then sliding past neighbours */
+    const c0 = Math.min(Math.max(a.x, lo), hi);
+    let done = false;
+    for(const ly of levels){
+      if(done) break;
+      const cands = [c0, xClear(ly) - w/2 - 6];
+      for(const b of blocks){ if(Math.abs(b.y-ly) < 22) cands.push(b.x1+8+w/2, b.x0-8-w/2); }
+      for(const c of cands.sort((p,q)=>Math.abs(p-a.x)-Math.abs(q-a.x))){
+        if(c < lo || c > hi || Math.abs(c-a.x) > SHIFT) continue;
+        if(blocks.some(b=> Math.abs(b.y-ly) < 22 && c-w/2 < b.x1+8 && c+w/2 > b.x0-8)) continue;
+        if(ly + 6 > Math.min(curveYatX(c-w/2), curveYatX(c+w/2)) - 6) continue;
+        if(Math.abs(ly - a.y) < 16 && Math.abs(c - a.x) < 40) continue;   /* not on your own node */
+        a.lx = c; a.ly = ly; done = true; break;
+      }
+    }
+    if(!done){                                                     /* fallback: any level, unlimited slide, still overlap-free */
+      let best = null;
+      for(let fy = TOP+8; fy < base - 34; fy += STEP){
+        const cands = [Math.min(Math.max(a.x, lo), hi), xClear(fy) - w/2 - 6];
+        for(const b of blocks){ if(Math.abs(b.y-fy) < 22) cands.push(b.x1+8+w/2, b.x0-8-w/2); }
+        for(const c of cands){
+          if(c < lo || c > hi) continue;
+          if(blocks.some(b=> Math.abs(b.y-fy) < 22 && c-w/2 < b.x1+8 && c+w/2 > b.x0-8)) continue;
+          if(fy + 6 > Math.min(curveYatX(c-w/2), curveYatX(c+w/2)) - 6) continue;
+          const cost = Math.abs(c-a.x)*1.4 + Math.abs(fy-(a.y-60));   /* long slides cost more than vertical drift */
+          if(!best || cost < best[2]) best = [c, fy, cost];
+        }
+      }
+      if(best){ a.lx = best[0]; a.ly = best[1]; }
+      else { a.lx = Math.min(Math.max(a.x, lo), hi); a.ly = TOP+8; }
+    }
+    blocks.push({x0:a.lx-w/2, x1:a.lx+w/2, y:a.ly});
+  });
+
+  let stems = "", nodes = "", labels = "";
+  for(const a of annos){
+    const m = a.m, ni = a.i;
+    const nodeTop = m.kind === "cap" ? m.y : m.y - 6;               /* rounds: stem meets the riser midpoint */
+    stems += `<g class="ann tk-pre" data-a="${ni}" data-ax="${r2(a.x)}">
+      <line x1="${r2(a.x)}" y1="${r2(nodeTop)}" x2="${r2(a.x)}" y2="${r2(a.ly)+7}" stroke="rgba(255,255,255,.26)"/>` +
+      (Math.abs(a.lx-a.x) > 2 ? `<line x1="${r2(a.x)}" y1="${r2(a.ly)+7}" x2="${r2(a.lx)}" y2="${r2(a.ly)+7}" stroke="rgba(255,255,255,.26)"/>` : "") + `</g>`;
+    labels += `<g class="ann tk-pre" data-a="${ni}" data-ax="${r2(a.x)}">
+      <text class="halo" x="${r2(a.lx)}" y="${r2(a.ly)}" font-size="10.5" fill="#D6D2D8" text-anchor="middle">${esc(a.l)}</text></g>`;
+  }
+  let dots = "";
+  marks.forEach((m,i)=>{
+    const title = `${m.d} · ${m.co} — ${m.t}`;
+    const annod = annos.some(a=>a.i===i);
+    dots += `<g class="mark${annod?" ann":""} tk-pre" ${annod?`data-a="${i}"`:""} data-ax="${r2(m.x)}" tabindex="0" role="link" data-i="${i}" aria-label="${esc(title)}">`;
+    if(m.kind === "ev")  dots += `<circle class="m" cx="${r2(m.x)}" cy="${r2(m.y)}" r="4.5" fill="#fff" stroke="${SURF}" stroke-width="2"/>`;
+    if(m.kind === "org") dots += `<circle class="m" cx="${r2(m.x)}" cy="${r2(m.y)}" r="4.5" fill="${SURF}" stroke="#fff" stroke-width="1.6"/>`;
+    if(m.kind === "cap" && annod) dots += `<rect class="m" x="${r2(m.x)-4}" y="${r2(m.y)-4}" width="8" height="8" transform="rotate(45 ${r2(m.x)} ${r2(m.y)})" fill="${ACC}" stroke="${SURF}" stroke-width="1.6"/>`;   /* a named round: the step itself is the event, marked in the curve's own colour */
+    dots += `<rect x="${r2(m.hit[0])}" y="${r2(m.hit[1])}" width="${r2(m.hit[2])}" height="${r2(m.hit[3])}" fill="transparent"/></g>`;
+  });
+  /* label hit areas ride on top so hovering the text works like hovering the node */
+  for(const a of annos){
+    const w = a.l.length*CW10 + 12;
+    dots += `<g class="mark ann tk-pre" data-a="${a.i}" data-i="${a.i}" data-ax="${r2(a.x)}" tabindex="-1"><rect x="${r2(a.lx-w/2)}" y="${r2(a.ly)-11}" width="${r2(w)}" height="20" fill="transparent" style="cursor:pointer"/></g>`;
+  }
+
+  /* align the text-and-controls blocks with the PLOT, not the page container: left edge at PL,
+     right edge at the now line. The data surfaces (this chart's svg, the directory table) stay
+     full-bleed — everything else lines up with the plot edge. */
+  const capL = PL/W*100, capW = (X(NOW)-PL)/W*100;
+  document.querySelectorAll(".tk-caption, #about, #directory .wrap > h2, #directory .controls, #directory .filter-row, #directory .count")
+    .forEach(el=>{ el.style.marginLeft = capL+"%"; el.style.width = capW+"%"; });
+  requestAnimationFrame(()=>{ box.scrollLeft = box.scrollWidth; });
+  box.innerHTML = `<svg viewBox="0 84 ${W} ${H-84}" role="img" aria-label="Disclosed funding in the RSI field as a running total from 2023 to now, with the field's milestones — shipped results and company launches — annotated along the curve">${g}${stems}${dots}${labels}</svg>`;
+  const svg = box.querySelector("svg");
+
+  /* growth animation: a rAF loop sweeps the clip rect left→right over 5s (linear — the live-feed
+     feel; the round cluster makes the cliff read as acceleration on its own), un-hiding each
+     mark/stem/label as the sweep passes its node x. Starts when the chart scrolls into view;
+     everything below runs synchronously after innerHTML, so there is no first-paint flash. */
+  const pres = Array.from(svg.querySelectorAll(".tk-pre"));
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches || !("requestAnimationFrame" in window)){
+    pres.forEach(el=>el.classList.remove("tk-pre"));
+  }else{
+    svg.classList.add("tk-growing");
+    const clipR = svg.querySelector("#tkclip rect");
+    const x0 = PL - 6, x1 = X(NOW) + 8, DUR = 5000;
+    clipR.setAttribute("width", x0);
+    const items = pres.map(el=>({el, x:+el.getAttribute("data-ax") || x1}));
+    let t0 = null;
+    const tick = now => {
+      if(t0 === null) t0 = now;
+      const p = Math.min((now - t0)/DUR, 1);
+      const sweep = x0 + (x1 - x0)*p;
+      clipR.setAttribute("width", r2(sweep));
+      for(const it of items){ if(it.el && it.x <= sweep){ it.el.classList.remove("tk-pre"); it.el = null; } }
+      if(p < 1) requestAnimationFrame(tick);
+      else setTimeout(()=>svg.classList.remove("tk-growing"), 500);
+    };
+    const start = ()=>requestAnimationFrame(tick);
+    if("IntersectionObserver" in window){
+      const io = new IntersectionObserver(es=>{ if(es.some(e=>e.isIntersecting)){ io.disconnect(); start(); } }, {threshold:.15});
+      io.observe(svg);
+    }else start();
+  }
+
+  document.getElementById("tk-sub").innerHTML =
+    `<b>${startups.length} startups</b> in the directory, <b>${since25}</b> founded since 2025. The first results ship while the curve is still flat; the money follows — <b>${fmtM(total)}</b> in disclosed rounds, <b>${pct26}%</b> of it in 2026. ● a shipped result, ○ a company launch, ◆ a named round; hover any step or annotation, click to open the entry.`;
+  document.getElementById("tk-foot").textContent =
+    `Dated, disclosed rounds from the directory's entries — ${fmtM(total)} of the ${fmtM(Math.round(siteTotal/100)*100)} cumulative funding it records; four disclosed totals with no public round date (Ndea, Intology, MiroMind, DeepWisdom) and everything undated are not on the curve. Frontier-lab capital is excluded; lab results are included. Category (RSI / Auto research / Self-improvement) is in the tooltip and the table.`;
+
+  let run2 = 0;
+  document.getElementById("tk-table").innerHTML = `<table><tr><th>Date</th><th>Company</th><th>Category</th><th>Event</th><th>Amount</th><th>Running total</th></tr>` +
+    evs.map(e=>{ if(e.kind==="cap") run2 += e.amt; const d = byName[e.co];
+      return `<tr><td class="mono">${e.d}</td><td>${d?`<a href="#/org/${slug(e.co)}">${esc(e.co)}</a>`:esc(e.co)}</td><td class="mono">${CATN[catOf(e.co)]}</td><td>${esc(e.t)}</td><td class="mono">${e.amt?fmtM(e.amt):"—"}</td><td class="mono">${e.kind==="cap"?fmtM(run2):""}</td></tr>`; }).join("") + `</table>`;
+
+  let tip = document.querySelector(".tk-tip");
+  if(!tip){ tip = document.createElement("div"); tip.className = "tk-tip"; document.body.appendChild(tip); }
+  const show = m => {
+    tip.textContent = "";
+    const d = document.createElement("div"); d.className = "d";
+    d.textContent = `${m.d} · ${CATN[m.cat].toUpperCase()}` + (m.kind==="cap" ? ` · running total ${fmtM(m.cum)}` : "");
+    const c = document.createElement("div"); c.className = "c"; c.textContent = m.co;
+    const e = document.createElement("div"); e.className = "e"; e.textContent = m.t;
+    tip.append(d, c, e); tip.style.display = "block";
+  };
+  const place = (cx, cy) => { tip.style.left = Math.min(cx + 14, innerWidth - 300) + "px"; tip.style.top = (cy + 16) + "px"; };
+  const setHot = (a, on) => {
+    svg.classList.toggle("tk-dim", on);
+    if(a != null) svg.querySelectorAll(`.ann[data-a="${a}"]`).forEach(el=>el.classList.toggle("hot", on));
+  };
+  box.querySelectorAll(".mark").forEach(el=>{
+    const m = marks[+el.dataset.i];
+    const a = el.dataset.a;
+    el.addEventListener("pointerenter", ev=>{ show(m); place(ev.clientX, ev.clientY); if(a!=null&&a!=="") setHot(a, true); });
+    el.addEventListener("pointermove", ev=> place(ev.clientX, ev.clientY));
+    el.addEventListener("pointerleave", ()=>{ tip.style.display = "none"; if(a!=null&&a!=="") setHot(a, false); });
+    el.addEventListener("focus", ()=>{ const b = el.getBoundingClientRect(); show(m); place(b.right, b.top); if(a!=null&&a!=="") setHot(a, true); });
+    el.addEventListener("blur", ()=>{ tip.style.display = "none"; if(a!=null&&a!=="") setHot(a, false); });
+    const open = ()=>{ if(byName[m.co]){ tip.style.display = "none"; goOrg(slug(m.co)); } };
+    el.addEventListener("click", open);
+    el.addEventListener("keydown", ev=>{ if(ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); open(); } });
+  });
+}
+
+render();
+route();
+buildTakeoff();
+bootTags();
+</script>
