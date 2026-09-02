@@ -226,10 +226,6 @@
     -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none}
   .note{margin:26px 0 0; padding:18px 20px; border:none; border-radius:16px}
-  /* the About block sheds its glass shell — plain copy, flush with the takeoff caption above it */
-  #about{background:none; box-shadow:none; backdrop-filter:none; -webkit-backdrop-filter:none; margin:0; padding:0; overflow:visible}
-  #about p{max-width:none}
-  #about::before{display:none}
 
   /* ---------- takeoff: capital, rounds and shipped results on one time axis ---------- */
   #takeoff{padding:clamp(14px,5vh,56px) 0 0; scroll-margin-top:64px}
@@ -238,7 +234,7 @@
   .tk-caption{margin:30px 0 0}
   .tk-caption h3{margin:0 0 6px; font-size:12px; font-family:"IBM Plex Mono",monospace; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-ink)}
   .takeoff h2{font-size:clamp(20px,2.3vw,26px); margin:2px 0 6px}
-  .tk-sub{color:var(--muted); font-size:14px; margin:0 0 10px}
+  .tk-sub{color:var(--muted); font-size:14px; margin:0 0 10px; line-height:1.55}
   .tk-sub b{color:var(--ink); font-weight:500}
   .tk-chart{overflow-x:auto; overflow-y:hidden}
   .tk-chart svg{display:block; width:100%; min-width:760px; height:auto}
@@ -264,14 +260,6 @@
   .tk-tip .c{font-weight:600; color:var(--ink)}
   .tk-tip .e{color:var(--muted)}
   .tk-foot{color:var(--faint); font-size:12.5px; margin:12px 0 0; line-height:1.5}
-  .takeoff details{margin-top:12px; border-top:1px solid var(--line-soft); padding-top:10px}
-  .takeoff summary{cursor:pointer; color:var(--muted); font-size:12px; font-family:"IBM Plex Mono",monospace; letter-spacing:.06em}
-  .tk-table{overflow-x:auto; margin-top:10px}
-  .tk-table table{border-collapse:collapse; font-size:13px; width:100%}
-  .tk-table th, .tk-table td{text-align:left; padding:5px 14px 5px 0; border-bottom:1px solid var(--line-soft); vertical-align:top}
-  .tk-table th{color:var(--faint); font-family:"IBM Plex Mono",monospace; font-weight:500; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase}
-  .tk-table td.mono{font-family:"IBM Plex Mono",monospace; color:var(--muted); white-space:nowrap}
-  .tk-table a{color:var(--ink)}
   .note h3{margin:0 0 6px; font-size:12px; font-family:"IBM Plex Mono",monospace; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-ink)}
   .note p{margin:0; color:var(--muted); font-size:14px; max-width:100ch}
   .note p + p{margin-top:9px}
@@ -514,11 +502,12 @@
   <div class="wrap">
     <div class="takeoff sr">
       <div class="tk-chart" id="tk-chart"></div>
-      <div class="tk-caption">
-        <h3>The takeoff</h3>
+      <div class="tk-caption" id="about">
+        <h3>About this directory</h3>
+        <p class="tk-sub">Recursive self-improvement, or RSI, is AI doing the work of building better AI. Whoever gets that loop running first sets the pace for the rest of the field, which is why it is worth tracking closely. Nobody has closed the loop yet. Plenty of teams say they are close.</p>
+        <p class="tk-sub">This directory lists the companies working toward it, from whichever angle they take: models that train their successors, harnesses that run research without a human in the loop, and the infrastructure and data underneath. It stopped being a frontier-lab story some time ago. Small teams with a tight loop are moving fast, and a good share of the results marked on the chart came from them, not from the labs.</p>
         <p class="tk-sub" id="tk-sub"></p>
         <p class="tk-foot" id="tk-foot"></p>
-        <details><summary>data table</summary><div class="tk-table" id="tk-table"></div></details>
       </div>
     </div>
   </div>
@@ -526,11 +515,6 @@
 
 <section id="directory">
   <div class="wrap">
-    <div class="note sr" id="about">
-      <h3>About this directory</h3>
-      <p>Recursive self-improvement (RSI) — AI improving the process of building AI itself — is a new frontier, and it may decide how fast everything else in AI moves. No one has closed the loop yet. This list is a framework for tracking that progress.</p>
-      <p>Companies are working toward it from different angles, and it is no longer only a frontier-lab game: small teams with tight loops can make AI evolve remarkably fast.</p>
-    </div>
     <h2 style="margin-top:44px"><em>Directory</em></h2>
     <div class="controls">
       <div class="search"><input id="q" type="search" placeholder="Search organizations, people…" aria-label="Search"></div>
@@ -766,7 +750,7 @@ const DATA = [
  flagship:"Novix co-scientist", people:"Chad Shi (ex-Microsoft), Jiabin Tang (PhD, HKU; ex-Kimi, ex-Baidu)", founded:2025, hq:"Sunnyvale, CA, USA",
  raised:0, raisedD:"\u2013", raisedC:"lo", val:0, valD:"\u2013", valC:"lo", oss:false,
  note:"VC-backed (Llama Ventures), amount undisclosed. Academic lineage in Hong Kong (co-founder is an HKU PhD, ex-Kimi and ex-Baidu); results are self-reported \u2014 no independent evaluation yet.",
- sources:[["novix.science","https://novix.science/"],["Chad Shi \u00b7 X","https://x.com/chadshi_1"],["Jiabin Tang \u00b7 X","https://x.com/tangjiabin7"],["Launch \u00b7 X 2025","https://x.com/huang_chao4969/status/1961120989015937287"]]},
+ sources:[["novix.science","https://novix.science/"],["Chad Shi \u00b7 X","https://x.com/chadshi_1"],["Jiabin Tang \u00b7 X","https://tjb-tech.github.io/"],["Launch \u00b7 X 2025","https://x.com/huang_chao4969/status/1961120989015937287"]]},
 
 {rank:null, radar:true, name:"Cursive", country:"UK", stage:"Seed", refs:{"stage":[3],"founded":[4],"head":[5]}, head:"11\u201350", headC:"med", url:"https://cursive.ai/", seg:"pure", dom:["Continual Learning"], lvl:0, target:3,
  loop:"Foundation models for behavioural prediction and long-horizon reasoning \u2014 built so agents become more effective the longer they are deployed, improving continuously from use.",
@@ -1622,7 +1606,7 @@ function buildTakeoff(){
      right edge at the now line. The data surfaces (this chart's svg, the directory table) stay
      full-bleed — everything else lines up with the plot edge. */
   const capL = PL/W*100, capW = (X(NOW)-PL)/W*100;
-  document.querySelectorAll(".tk-caption, #about, #directory .wrap > h2, #directory .controls, #directory .filter-row, #directory .count")
+  document.querySelectorAll(".tk-caption, #directory .wrap > h2, #directory .controls, #directory .filter-row, #directory .count")
     .forEach(el=>{ el.style.marginLeft = capL+"%"; el.style.width = capW+"%"; });
   requestAnimationFrame(()=>{ box.scrollLeft = box.scrollWidth; });
   box.innerHTML = `<svg viewBox="0 84 ${W} ${H-84}" role="img" aria-label="Disclosed funding in the RSI field as a running total from 2023 to now, with the field's milestones — shipped results and company launches — annotated along the curve">${g}${stems}${dots}${labels}</svg>`;
@@ -1659,14 +1643,10 @@ function buildTakeoff(){
   }
 
   document.getElementById("tk-sub").innerHTML =
-    `<b>${startups.length} startups</b> in the directory, <b>${since25}</b> founded since 2025. The first results ship while the curve is still flat; the money follows — <b>${fmtM(total)}</b> in disclosed rounds, <b>${pct26}%</b> of it in 2026. ● a shipped result, ○ a company launch, ◆ a named round; hover any step or annotation, click to open the entry.`;
+    `The chart above lays the field's milestones over its money. <b>${startups.length} startups</b> are in the directory, <b>${since25}</b> of them founded since 2025. The early results shipped while the funding curve was still flat. The money came afterwards: <b>${fmtM(total)}</b> in disclosed rounds, <b>${pct26}%</b> of it in 2026. ● marks a shipped result, ○ a company launch, ◆ a named round. Hover a step or a label for the detail, click to open the entry.`;
   document.getElementById("tk-foot").textContent =
-    `Dated, disclosed rounds from the directory's entries — ${fmtM(total)} of the ${fmtM(Math.round(siteTotal/100)*100)} cumulative funding it records; four disclosed totals with no public round date (Ndea, Intology, MiroMind, DeepWisdom) and everything undated are not on the curve. Frontier-lab capital is excluded; lab results are included. Category (RSI / Auto research / Self-improvement) is in the tooltip and the table.`;
+    `Only dated, disclosed rounds from the directory's own entries are plotted: ${fmtM(total)} of the ${fmtM(Math.round(siteTotal/100)*100)} in cumulative funding it records. Four companies disclosed a total but never a round date (Ndea, Intology, MiroMind, DeepWisdom), so they stay off the curve along with everything else undated. Frontier-lab capital is left out. Lab results are kept in, because those are the results the startups get measured against. Category (RSI, auto research, self-improvement) shows in the tooltip and on each company's page.`;
 
-  let run2 = 0;
-  document.getElementById("tk-table").innerHTML = `<table><tr><th>Date</th><th>Company</th><th>Category</th><th>Event</th><th>Amount</th><th>Running total</th></tr>` +
-    evs.map(e=>{ if(e.kind==="cap") run2 += e.amt; const d = byName[e.co];
-      return `<tr><td class="mono">${e.d}</td><td>${d?`<a href="#/org/${slug(e.co)}">${esc(e.co)}</a>`:esc(e.co)}</td><td class="mono">${CATN[catOf(e.co)]}</td><td>${esc(e.t)}</td><td class="mono">${e.amt?fmtM(e.amt):"—"}</td><td class="mono">${e.kind==="cap"?fmtM(run2):""}</td></tr>`; }).join("") + `</table>`;
 
   let tip = document.querySelector(".tk-tip");
   if(!tip){ tip = document.createElement("div"); tip.className = "tk-tip"; document.body.appendChild(tip); }
