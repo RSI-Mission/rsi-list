@@ -1,0 +1,172 @@
+{
+  "adaption": [
+    "Applications"
+  ],
+  "anthropic": [
+    "Model",
+    "Harness",
+    "Infra",
+    "Data/Eval",
+    "Applications"
+  ],
+  "apodex": [
+    "Model",
+    "Data/Eval"
+  ],
+  "asari-ai": [
+    "Infra"
+  ],
+  "autoscience": [
+    "Applications"
+  ],
+  "core-automation": [
+    "Harness",
+    "Applications"
+  ],
+  "cursive": [
+    "Model"
+  ],
+  "deep-cogito": [
+    "Model",
+    "Infra"
+  ],
+  "deepwisdom": [
+    "Harness",
+    "Applications"
+  ],
+  "disarray": [
+    "Applications"
+  ],
+  "discovery-loop": [
+    "Model",
+    "Harness",
+    "Infra",
+    "Data/Eval"
+  ],
+  "edison-scientific": [
+    "Applications"
+  ],
+  "elicit": [
+    "Applications"
+  ],
+  "engram": [
+    "Infra",
+    "Applications"
+  ],
+  "evermind": [
+    "Harness",
+    "Infra"
+  ],
+  "evolvent-ai": [
+    "Data/Eval"
+  ],
+  "frontis-ai": [
+    "Infra",
+    "Data/Eval"
+  ],
+  "futurehouse": [
+    "Harness",
+    "Data/Eval",
+    "Applications"
+  ],
+  "google-deepmind": [
+    "Model",
+    "Harness",
+    "Infra",
+    "Data/Eval",
+    "Applications"
+  ],
+  "ineffable-intelligence": [
+    "Model",
+    "Infra"
+  ],
+  "inherent": [
+    "Data/Eval",
+    "Applications"
+  ],
+  "intology": [
+    "Infra",
+    "Applications"
+  ],
+  "latent-labs": [
+    "Model",
+    "Applications"
+  ],
+  "letta": [
+    "Harness",
+    "Infra"
+  ],
+  "lila-sciences": [
+    "Model",
+    "Data/Eval",
+    "Applications"
+  ],
+  "mirendil": [
+    "Applications"
+  ],
+  "miromind": [
+    "Model",
+    "Data/Eval"
+  ],
+  "ndea": [
+    "Data/Eval"
+  ],
+  "novix": [
+    "Harness",
+    "Data/Eval",
+    "Applications"
+  ],
+  "openai": [
+    "Model",
+    "Harness",
+    "Infra",
+    "Data/Eval",
+    "Applications"
+  ],
+  "openpipe": [
+    "Infra"
+  ],
+  "periodic-labs": [
+    "Infra",
+    "Data/Eval",
+    "Applications"
+  ],
+  "physical-superintelligence": [
+    "Infra"
+  ],
+  "poetiq": [
+    "Model",
+    "Data/Eval"
+  ],
+  "potato": [
+    "Infra",
+    "Applications"
+  ],
+  "recursive-superintelligence": [
+    "Model",
+    "Infra",
+    "Data/Eval"
+  ],
+  "ricursive-intelligence": [
+    "Applications"
+  ],
+  "sakana-ai": [
+    "Model",
+    "Harness",
+    "Data/Eval"
+  ],
+  "tetsuwan-scientific": [
+    "Infra",
+    "Applications"
+  ],
+  "trajectory": [
+    "Model"
+  ],
+  "weco-ai": [
+    "Harness",
+    "Applications"
+  ],
+  "zenbase": [
+    "Applications"
+  ]
+}
