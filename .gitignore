@@ -1,0 +1,7 @@
+.DS_Store
+tools/verify_report.*
+tools/pipeline_state.json
+tools/verify_run.log
+.env
+data/*.tmp
+.vercel
